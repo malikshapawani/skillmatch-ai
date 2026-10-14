@@ -1,0 +1,58 @@
+
+{
+  "Programming Languages": [
+    "Python",
+    "Java",
+    "JavaScript",
+    "TypeScript",
+    "C",
+    "C++",
+    "C#",
+    "PHP"
+  ],
+  "Web Development": [
+    "HTML",
+    "CSS",
+    "React",
+    "Angular",
+    "Vue.js",
+    "Node.js",
+    "Flask",
+    "Django",
+    "Streamlit"
+  ],
+  "Databases": [
+    "SQL",
+    "MySQL",
+    "PostgreSQL",
+    "MongoDB",
+    "Firebase"
+  ],
+  "Tools and DevOps": [
+    "Git",
+    "GitHub",
+    "Docker",
+    "Kubernetes",
+    "AWS",
+    "Azure",
+    "Linux"
+  ],
+  "Data Science and AI": [
+    "Machine Learning",
+    "Deep Learning",
+    "Natural Language Processing",
+    "Pandas",
+    "NumPy",
+    "Scikit-learn",
+    "TensorFlow",
+    "PyTorch"
+  ],
+  "Software Engineering": [
+    "REST API",
+    "Unit Testing",
+    "Agile",
+    "Scrum",
+    "Software Testing",
+    "Object-Oriented Programming"
+  ]
+}
