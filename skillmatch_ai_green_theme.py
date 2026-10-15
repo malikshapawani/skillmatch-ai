@@ -280,6 +280,43 @@ st.markdown(
     .priority-badge.high {{ box-shadow:0 0 12px rgba(229,79,95,.12); }}
     .priority-badge.medium {{ box-shadow:0 0 12px rgba(230,165,38,.12); }}
     .priority-badge.low {{ box-shadow:0 0 12px rgba(44,166,111,.12); }}
+    /* Larger, cleaner typography */
+    html, body, [data-testid="stAppViewContainer"] {{ font-size: 16px; }}
+    .stMarkdown, .stText {{ font-size: 1rem; line-height: 1.65; }}
+    h1 {{ font-size: 2.45rem !important; }}
+    h2 {{ font-size: 1.9rem !important; }}
+    h3 {{ font-size: 1.35rem !important; }}
+    h4 {{ font-size: 1.12rem !important; }}
+    [data-testid="stCaptionContainer"] p {{ font-size: .9rem !important; }}
+
+    /* Highlighted insight metric cards */
+    [data-testid="stMetric"] {{
+      background: linear-gradient(145deg, var(--sm-panel), var(--sm-panel2)) !important;
+      border: 1px solid #25B86B !important; border-radius: 16px !important;
+      padding: 17px 18px !important; box-shadow: 0 6px 18px rgba(20,150,80,.10);
+    }}
+    [data-testid="stMetricLabel"] p {{ color: var(--sm-muted) !important; font-size: .9rem !important; font-weight: 700 !important; }}
+    [data-testid="stMetricValue"] {{ color: var(--sm-accent) !important; font-size: 1.9rem !important; font-weight: 850 !important; }}
+
+    /* Distinct tab controls */
+    [data-testid="stTabs"] [role="tablist"] {{ gap: 10px; border-bottom: 1px solid var(--sm-border); padding: 8px; background: var(--sm-panel2); border-radius: 14px 14px 0 0; }}
+    [data-testid="stTabs"] button[role="tab"] {{ background: var(--sm-panel) !important; border: 1px solid var(--sm-border) !important; border-radius: 10px !important; padding: 10px 16px !important; color: var(--sm-text) !important; font-weight: 750 !important; }}
+    [data-testid="stTabs"] button[role="tab"][aria-selected="true"] {{ background: linear-gradient(120deg,#087F4F,#22C879) !important; border-color: #22C879 !important; color: #FFFFFF !important; box-shadow: 0 4px 14px rgba(34,200,121,.2); }}
+    [data-testid="stTabs"] [data-baseweb="tab-panel"] {{ padding: 18px 6px 8px 6px; }}
+
+    /* Reusable content cards */
+    .feature-card, .about-card, .export-card {{ background: var(--sm-panel); border: 1px solid var(--sm-border); border-radius: 18px; padding: 22px 24px; margin: 10px 0 16px 0; box-shadow: 0 8px 24px rgba(10,70,38,.07); }}
+    .feature-card {{ border-top: 4px solid #24C879; background: linear-gradient(145deg,var(--sm-panel),var(--sm-panel2)); }}
+    .feature-card h3, .about-card h3, .export-card h3 {{ color: var(--sm-text) !important; font-size: 1.22rem; margin: 0 0 12px 0; }}
+    .feature-card ul, .about-card ul {{ padding-left: 22px; margin-bottom: 0; }}
+    .feature-card li, .about-card li {{ color: var(--sm-text); margin: 8px 0; line-height: 1.6; }}
+    .about-card.components {{ border-top: 4px solid #20B878; }}
+    .about-card.limitations {{ border-top: 4px solid #E5A83B; }}
+    .export-card {{ border-top: 4px solid #20B878; }}
+    .export-card p {{ color: var(--sm-muted) !important; }}
+    .export-icon {{ display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 12px; background: var(--sm-panel2); border: 1px solid var(--sm-border); font-size: 1.35rem; margin-bottom: 10px; }}
+    .section-intro {{ color: var(--sm-muted) !important; font-size: 1rem; line-height: 1.7; margin-bottom: 18px; }}
+    [data-testid="stDataFrame"] {{ border: 1px solid var(--sm-border) !important; border-radius: 14px !important; overflow: hidden; }}
     </style>
     """,
     unsafe_allow_html=True,
@@ -440,7 +477,7 @@ def html_report(result):
 def chart_layout(fig):
     fig.update_layout(
         paper_bgcolor=PANEL, plot_bgcolor=PANEL, font_color=TEXT,
-        colorway=["#24D17E", "#8B5CF6", "#22D3EE", "#FBBF24", "#FB7185"],
+        colorway=["#18A85B", "#35D07F", "#7CE7A5", "#0B7542", "#B4F3CA"],
         margin=dict(l=10, r=10, t=35, b=10), legend_title_text="",
     )
     fig.update_xaxes(gridcolor=BORDER, zerolinecolor=BORDER, tickfont_color=TEXT, title_font_color=TEXT)
@@ -514,124 +551,16 @@ if page == "🏠 Overview":
         st.markdown('<div class="panel"><h3>🚀 Improvement plan</h3><p class="muted">Get section checks, evidence-based suggestions, and an exportable report.</p></div>', unsafe_allow_html=True)
     if result:
         st.success(f"Latest analysis available for **{result['filename']}**.")
-        a, b, c, d = st.columns(4)
-        a.metric("Text similarity", f"{result['similarity']:.1f}%")
-        b.metric("Skill coverage", f"{result['coverage']:.1f}%")
-        c.metric("ATS readiness", f"{result['ats_score']}/100")
-        d.metric("Missing skills", len(result["missing"]))
-        st.info("Open Insights or Action plan in the sidebar to continue.")
-    else:
-        st.info("Start in **Analyze CV** to upload a PDF and paste a job description.")
-    st.markdown("#### What the scores mean")
-    st.markdown(
-        "- **Text similarity:** lexical overlap estimated using TF-IDF; it is not a semantic understanding score.\n"
-        "- **Skill coverage:** share of detected job skills also found in the CV.\n"
-        "- **ATS-readiness estimate:** a transparent heuristic based on sections, length, bullets, action verbs, and measurable evidence — not a real ATS vendor score."
-    )
-
-elif page == "🔎 Analyze CV":
-    st.subheader("Analyze a resume against a vacancy")
-    st.caption("Use a text-based PDF. Scanned image PDFs may need OCR before analysis.")
-    left, right = st.columns([0.9, 1.1], gap="large")
-    with left:
-        uploaded_file = st.file_uploader("Upload your CV (PDF)", type=["pdf"], help="Your file is processed for this session.")
-        if uploaded_file:
-            st.success(f"Ready: {uploaded_file.name}")
-        st.markdown("#### Job description")
-        sample_job = (
-            "Software Engineer\n\n"
-            "Required: Python, SQL, Git, REST API, unit testing, problem solving.\n"
-            "Responsibilities: Develop and maintain web applications, design APIs, "
-            "write automated tests, collaborate with a team, review code, and document solutions.\n"
-            "Preferred: Docker, AWS, CI/CD, React, machine learning."
-        )
-        if st.button("Load a realistic sample job", use_container_width=True):
-            st.session_state.job_description = sample_job
-        job_description = st.text_area(
-            "Paste the complete job description",
-            key="job_description",
-            height=260,
-            placeholder="Include responsibilities, required qualifications, preferred skills, and experience...",
-        )
-        analyze = st.button("✨ Run full analysis", type="primary", use_container_width=True)
-    with right:
-        st.markdown("#### What you'll receive")
-        st.markdown(
-            "- Overall match indicators and a transparent ATS-readiness estimate\n"
-            "- Required / preferred skill gap table\n"
-            "- CV section completeness check\n"
-            "- Category-level skill coverage visualization\n"
-            "- Specific suggestions to improve the CV\n"
-            "- Downloadable HTML report and plain-text summary"
-        )
-        st.warning("The analyzer identifies terms and structural signals. It cannot verify whether a skill is genuinely mastered, and it does not predict hiring outcomes.")
-        st.markdown("#### Privacy reminder")
-        st.caption("Avoid uploading another person's CV without permission. Remove sensitive information if it is not needed for analysis.")
-
-    if analyze:
-        if uploaded_file is None:
-            st.warning("Please upload a PDF CV first.")
-        elif not job_description.strip():
-            st.warning("Please enter a job description.")
-        else:
-            with st.spinner("Reading CV and building your analysis..."):
-                cv_text, error = extract_text_from_pdf(uploaded_file)
-                if error:
-                    st.error(error)
-                else:
-                    cv_skill_map = find_skills(cv_text)
-                    job_skill_map = find_skills(job_description)
-                    cv_skills = flatten_skills(cv_skill_map)
-                    job_skills = flatten_skills(job_skill_map)
-                    cv_set = set(cv_skills)
-                    job_set = set(job_skills)
-                    matched = sorted(cv_set & job_set, key=str.lower)
-                    missing = sorted(job_set - cv_set, key=str.lower)
-                    coverage = (len(matched) / len(job_set) * 100) if job_set else 0.0
-                    similarity = calculate_similarity(cv_text, job_description)
-                    sections = detect_sections(cv_text)
-                    ats, metrics = ats_score(cv_text, sections)
-                    priority_rows = prioritize_skills(job_description, job_skills, cv_skills)
-                    high_priority_missing = [r["Skill"] for r in priority_rows if r["Status"] == "Missing" and r["Priority"] == "High"]
-                    analysis = {
-                        "filename": uploaded_file.name,
-                        "cv_text": cv_text,
-                        "job_description": job_description,
-                        "cv_skill_map": cv_skill_map,
-                        "job_skill_map": job_skill_map,
-                        "cv_skills": cv_skills,
-                        "job_skills": job_skills,
-                        "matched": matched,
-                        "missing": missing,
-                        "coverage": coverage,
-                        "similarity": similarity,
-                        "sections": sections,
-                        "ats_score": ats,
-                        "word_count": metrics["Word count"],
-                        "bullets": metrics["Bullet points detected"],
-                        "quantified": metrics["Quantified results detected"],
-                        "action_verbs": metrics["Action verbs detected"],
-                        "priority_rows": priority_rows,
-                        "high_priority_missing": high_priority_missing,
-                    }
-                    analysis["recommendations"] = build_recommendations(analysis)
-                    st.session_state.analysis = analysis
-                    st.success("Analysis complete. Open Insights, Action plan, and Export report from the sidebar.")
-                    st.rerun()
-
-elif page == "📊 Insights":
-    if not result:
-        st.info("Run an analysis first from **Analyze CV**.")
-    else:
-        st.subheader("Analysis insights")
-        st.caption(f"Report for: {result['filename']}")
-        a, b, c, d = st.columns(4)
-        a.metric("Text similarity", f"{result['similarity']:.1f}%")
-        b.metric("Skill coverage", f"{result['coverage']:.1f}%")
-        c.metric("ATS readiness", f"{result['ats_score']}/100")
-        d.metric("Skills matched", f"{len(result['matched'])}/{len(result['job_skills'])}")
+        st.markdown('<div class="section-intro">A clear summary of your CV match, skill coverage, and structure signals.</div>', unsafe_allow_html=True)
+        with st.container(border=True):
+            a, b, c, d = st.columns(4, gap="medium")
+            a.metric("Text similarity", f"{result['similarity']:.1f}%")
+            b.metric("Skill coverage", f"{result['coverage']:.1f}%")
+            c.metric("ATS readiness", f"{result['ats_score']}/100")
+            d.metric("Skills matched", f"{len(result['matched'])}/{len(result['job_skills'])}")
         st.caption("Similarity and coverage measure different things. ATS readiness is a transparent heuristic, not a guarantee of passing an applicant tracking system.")
-        tabs = st.tabs(["Skill gaps", "CV structure", "Skill categories", "CV text preview"])
+        st.markdown("### Explore your analysis")
+        tabs = st.tabs(["🧩 Skill gaps", "📄 CV structure", "🌿 Skill categories", "👁️ CV text preview"])
         with tabs[0]:
             if result["priority_rows"]:
                 df = pd.DataFrame(result["priority_rows"])[["Skill", "Priority", "Status"]]
@@ -640,8 +569,8 @@ elif page == "📊 Insights":
                     matched_n = len(result["matched"])
                     missing_n = len(result["missing"])
                     fig = go.Figure(data=[
-                        go.Bar(name="Matched", x=["Job skills"], y=[matched_n], marker_color="#239B62"),
-                        go.Bar(name="Missing", x=["Job skills"], y=[missing_n], marker_color="#A8DDB5"),
+                        go.Bar(name="Matched", x=["Job skills"], y=[matched_n], marker_color="#18A85B"),
+                        go.Bar(name="Missing", x=["Job skills"], y=[missing_n], marker_color="#A7EFC2"),
                     ])
                     fig.update_layout(barmode="stack", title="Detected job skills: matched vs missing", yaxis_title="Number of skills")
                     st.plotly_chart(chart_layout(fig), use_container_width=True)
@@ -653,7 +582,11 @@ elif page == "📊 Insights":
                 for name, found in result["sections"].items()
             ])
             st.dataframe(section_df[["CV section", "Status"]], use_container_width=True, hide_index=True)
-            fig = px.bar(section_df, x="CV section", y="Present", range_y=[0, 1.15], title="CV section completeness", text="Status")
+            fig = px.bar(
+                section_df, x="CV section", y="Present", range_y=[0, 1.15],
+                title="CV section completeness", text="Status",
+                color_discrete_sequence=["#18A85B"],
+            )
             st.plotly_chart(chart_layout(fig), use_container_width=True)
             st.caption(f"Text signals: {result['word_count']} words • {result['bullets']} bullets • {result['action_verbs']} action-verb mentions • {result['quantified']} numeric evidence signals.")
         with tabs[2]:
@@ -665,7 +598,11 @@ elif page == "📊 Insights":
             if categories:
                 cat_df = pd.DataFrame(categories)
                 st.dataframe(cat_df, use_container_width=True, hide_index=True)
-                fig = px.bar(cat_df, x="Category", y=["Matched", "Missing"], barmode="group", title="Coverage by skill category")
+                fig = px.bar(
+                    cat_df, x="Category", y=["Matched", "Missing"], barmode="group",
+                    title="Coverage by skill category",
+                    color_discrete_sequence=["#18A85B", "#A7EFC2"],
+                )
                 st.plotly_chart(chart_layout(fig), use_container_width=True)
             else:
                 st.info("No categorized skills were detected.")
@@ -755,52 +692,97 @@ elif page == "📄 Export report":
         st.info("Run an analysis first from **Analyze CV**.")
     else:
         st.subheader("Export your analysis")
-        st.write("Download a shareable report for your own review. Check the report before sharing it with anyone.")
-        st.download_button(
-            "⬇️ Download detailed HTML report",
-            data=html_report(result),
-            file_name="skillmatch_ai_report.html",
-            mime="text/html",
-            type="primary",
-            use_container_width=True,
+        st.markdown(
+            '<div class="section-intro">Choose a format for your report. Review the contents before sharing, as reports may include details extracted from your CV.</div>',
+            unsafe_allow_html=True,
         )
-        st.download_button(
-            "⬇️ Download plain-text report",
-            data=make_text_report(result),
-            file_name="skillmatch_ai_report.txt",
-            mime="text/plain",
-            use_container_width=True,
+        st.markdown(
+            """
+            <div class="export-card">
+              <span class="export-icon">📊</span>
+              <h3>Detailed analysis report</h3>
+              <p>Review match indicators, skill tables, and recommendations in a browser.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
         )
+        html_col, txt_col = st.columns(2, gap="large")
+        with html_col:
+            with st.container(border=True):
+                st.markdown("### 🌐 HTML report")
+                st.write("A styled report with metrics, skill tables, and recommendations.")
+                st.download_button(
+                    "⬇️ Download HTML report",
+                    data=html_report(result),
+                    file_name="skillmatch_ai_report.html",
+                    mime="text/html",
+                    type="primary",
+                    use_container_width=True,
+                )
+        with txt_col:
+            with st.container(border=True):
+                st.markdown("### 📝 Plain-text report")
+                st.write("A lightweight text summary for notes and records.")
+                st.download_button(
+                    "⬇️ Download TXT report",
+                    data=make_text_report(result),
+                    file_name="skillmatch_ai_report.txt",
+                    mime="text/plain",
+                    use_container_width=True,
+                )
         if result["priority_rows"]:
             csv_data = pd.DataFrame(result["priority_rows"])[["Skill", "Priority", "Status"]].to_csv(index=False).encode("utf-8")
-            st.download_button(
-                "⬇️ Download skill-gap CSV",
-                data=csv_data,
-                file_name="skillmatch_skill_gaps.csv",
-                mime="text/csv",
-                use_container_width=True,
-            )
-        st.caption("This version exports HTML, text, and CSV. A PDF export can be added later with a PDF-generation dependency.")
+            with st.container(border=True):
+                st.markdown("### 🌿 Skill-gap data")
+                st.write("A CSV spreadsheet of detected skills, priorities, and match status.")
+                st.download_button(
+                    "⬇️ Download skill-gap CSV",
+                    data=csv_data,
+                    file_name="skillmatch_skill_gaps.csv",
+                    mime="text/csv",
+                    use_container_width=True,
+                )
+        st.caption("Available formats: HTML, TXT, and CSV. PDF export is not included in this version.")
 
 elif page == "ℹ️ About":
     st.subheader("About SkillMatch AI")
-    st.write("SkillMatch AI is a resume analysis prototype designed to help job seekers compare a text-based PDF CV with a job description.")
-    st.markdown("#### Current analysis components")
     st.markdown(
-        "- PDF text extraction with PyMuPDF\n"
-        "- Skill dictionary matching by category\n"
-        "- TF-IDF and cosine similarity\n"
-        "- Skill coverage and missing-skill identification\n"
-        "- Heuristic ATS-readiness indicators\n"
-        "- CV section checks and improvement suggestions\n"
-        "- Interactive charts and downloadable HTML / TXT / CSV reports"
+        '<div class="section-intro">SkillMatch AI helps job seekers compare a text-based PDF CV with a target job description, understand detected gaps, and plan practical improvements.</div>',
+        unsafe_allow_html=True,
     )
-    st.markdown("#### Limitations")
-    st.markdown(
-        "- Skill detection depends on `data/skills.json`; unlisted skills may be missed.\n"
-        "- Text similarity is not a full semantic understanding of the job.\n"
-        "- The ATS-readiness estimate is a transparent heuristic, not a vendor ATS score.\n"
-        "- The system cannot verify truthfulness, proficiency, or actual work experience.\n"
-        "- A scanned PDF without a text layer may not be readable."
-    )
+    about_left, about_right = st.columns(2, gap="large")
+    with about_left:
+        st.markdown(
+            """
+            <div class="about-card components">
+              <h3>🌿 Current analysis components</h3>
+              <ul>
+                <li>PDF text extraction with PyMuPDF</li>
+                <li>Skill dictionary matching by category</li>
+                <li>TF-IDF and cosine similarity</li>
+                <li>Skill coverage and missing-skill identification</li>
+                <li>Heuristic ATS-readiness indicators</li>
+                <li>CV section checks and improvement suggestions</li>
+                <li>Interactive charts and HTML / TXT / CSV reports</li>
+              </ul>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with about_right:
+        st.markdown(
+            """
+            <div class="about-card limitations">
+              <h3>⚠️ Limitations</h3>
+              <ul>
+                <li>Skill detection depends on <code>data/skills.json</code>; unlisted skills may be missed.</li>
+                <li>Text similarity is not full semantic understanding of the job.</li>
+                <li>ATS readiness is a heuristic, not a vendor ATS score.</li>
+                <li>The system cannot verify truthfulness, proficiency, or work experience.</li>
+                <li>Scanned PDFs without a text layer may not be readable.</li>
+              </ul>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
     st.info("Use the results as guidance, not as a hiring prediction. Never add skills or achievements to a CV unless they are true.")
