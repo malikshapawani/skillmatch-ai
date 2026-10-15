@@ -609,6 +609,149 @@ if page == "🏠 Overview":
         with tabs[3]:
             st.text_area("Extracted CV text (read-only preview)", result["cv_text"], height=300, disabled=True)
 
+elif page == "🔎 Analyze CV":
+    st.subheader("Analyze a resume against a vacancy")
+    st.caption("Use a text-based PDF. Scanned image PDFs may need OCR before analysis.")
+    left, right = st.columns([0.9, 1.1], gap="large")
+    with left:
+        uploaded_file = st.file_uploader("Upload your CV (PDF)", type=["pdf"], help="Your file is processed for this session.")
+        if uploaded_file:
+            st.success(f"Ready: {uploaded_file.name}")
+        st.markdown("#### Job description")
+        sample_job = (
+            "Software Engineer\n\n"
+            "Required: Python, SQL, Git, REST API, unit testing, problem solving.\n"
+            "Responsibilities: Develop and maintain web applications, design APIs, "
+            "write automated tests, collaborate with a team, review code, and document solutions.\n"
+            "Preferred: Docker, AWS, CI/CD, React, machine learning."
+        )
+        if st.button("Load a realistic sample job", use_container_width=True):
+            st.session_state.job_description = sample_job
+        job_description = st.text_area(
+            "Paste the complete job description",
+            key="job_description",
+            height=260,
+            placeholder="Include responsibilities, required qualifications, preferred skills, and experience...",
+        )
+        analyze = st.button("✨ Run full analysis", type="primary", use_container_width=True)
+    with right:
+        st.markdown("#### What you'll receive")
+        st.markdown(
+            "- Overall match indicators and a transparent ATS-readiness estimate\n"
+            "- Required / preferred skill gap table\n"
+            "- CV section completeness check\n"
+            "- Category-level skill coverage visualization\n"
+            "- Specific suggestions to improve the CV\n"
+            "- Downloadable HTML report and plain-text summary"
+        )
+        st.warning("The analyzer identifies terms and structural signals. It cannot verify whether a skill is genuinely mastered, and it does not predict hiring outcomes.")
+        st.markdown("#### Privacy reminder")
+        st.caption("Avoid uploading another person's CV without permission. Remove sensitive information if it is not needed for analysis.")
+
+    if analyze:
+        if uploaded_file is None:
+            st.warning("Please upload a PDF CV first.")
+        elif not job_description.strip():
+            st.warning("Please enter a job description.")
+        else:
+            with st.spinner("Reading CV and building your analysis..."):
+                cv_text, error = extract_text_from_pdf(uploaded_file)
+                if error:
+                    st.error(error)
+                else:
+                    cv_skill_map = find_skills(cv_text)
+                    job_skill_map = find_skills(job_description)
+                    cv_skills = flatten_skills(cv_skill_map)
+                    job_skills = flatten_skills(job_skill_map)
+                    cv_set = set(cv_skills)
+                    job_set = set(job_skills)
+                    matched = sorted(cv_set & job_set, key=str.lower)
+                    missing = sorted(job_set - cv_set, key=str.lower)
+                    coverage = (len(matched) / len(job_set) * 100) if job_set else 0.0
+                    similarity = calculate_similarity(cv_text, job_description)
+                    sections = detect_sections(cv_text)
+                    ats, metrics = ats_score(cv_text, sections)
+                    priority_rows = prioritize_skills(job_description, job_skills, cv_skills)
+                    high_priority_missing = [r["Skill"] for r in priority_rows if r["Status"] == "Missing" and r["Priority"] == "High"]
+                    analysis = {
+                        "filename": uploaded_file.name,
+                        "cv_text": cv_text,
+                        "job_description": job_description,
+                        "cv_skill_map": cv_skill_map,
+                        "job_skill_map": job_skill_map,
+                        "cv_skills": cv_skills,
+                        "job_skills": job_skills,
+                        "matched": matched,
+                        "missing": missing,
+                        "coverage": coverage,
+                        "similarity": similarity,
+                        "sections": sections,
+                        "ats_score": ats,
+                        "word_count": metrics["Word count"],
+                        "bullets": metrics["Bullet points detected"],
+                        "quantified": metrics["Quantified results detected"],
+                        "action_verbs": metrics["Action verbs detected"],
+                        "priority_rows": priority_rows,
+                        "high_priority_missing": high_priority_missing,
+                    }
+                    analysis["recommendations"] = build_recommendations(analysis)
+                    st.session_state.analysis = analysis
+                    st.success("Analysis complete. Open Insights, Action plan, and Export report from the sidebar.")
+                    st.rerun()
+
+elif page == "📊 Insights":
+    if not result:
+        st.info("Run an analysis first from **Analyze CV**.")
+    else:
+        st.subheader("Analysis insights")
+        st.caption(f"Report for: {result['filename']}")
+        a, b, c, d = st.columns(4)
+        a.metric("Text similarity", f"{result['similarity']:.1f}%")
+        b.metric("Skill coverage", f"{result['coverage']:.1f}%")
+        c.metric("ATS readiness", f"{result['ats_score']}/100")
+        d.metric("Skills matched", f"{len(result['matched'])}/{len(result['job_skills'])}")
+        st.caption("Similarity and coverage measure different things. ATS readiness is a transparent heuristic, not a guarantee of passing an applicant tracking system.")
+        tabs = st.tabs(["Skill gaps", "CV structure", "Skill categories", "CV text preview"])
+        with tabs[0]:
+            if result["priority_rows"]:
+                df = pd.DataFrame(result["priority_rows"])[["Skill", "Priority", "Status"]]
+                st.dataframe(df, use_container_width=True, hide_index=True)
+                if result["job_skills"]:
+                    matched_n = len(result["matched"])
+                    missing_n = len(result["missing"])
+                    fig = go.Figure(data=[
+                        go.Bar(name="Matched", x=["Job skills"], y=[matched_n], marker_color="#239B62"),
+                        go.Bar(name="Missing", x=["Job skills"], y=[missing_n], marker_color="#A8DDB5"),
+                    ])
+                    fig.update_layout(barmode="stack", title="Detected job skills: matched vs missing", yaxis_title="Number of skills")
+                    st.plotly_chart(chart_layout(fig), use_container_width=True)
+            else:
+                st.info("No skills from the current skill dictionary were detected in the job description. You can extend data/skills.json.")
+        with tabs[1]:
+            section_df = pd.DataFrame([
+                {"CV section": name, "Status": "Detected" if found else "Not detected", "Present": int(found)}
+                for name, found in result["sections"].items()
+            ])
+            st.dataframe(section_df[["CV section", "Status"]], use_container_width=True, hide_index=True)
+            fig = px.bar(section_df, x="CV section", y="Present", range_y=[0, 1.15], title="CV section completeness", text="Status")
+            st.plotly_chart(chart_layout(fig), use_container_width=True)
+            st.caption(f"Text signals: {result['word_count']} words • {result['bullets']} bullets • {result['action_verbs']} action-verb mentions • {result['quantified']} numeric evidence signals.")
+        with tabs[2]:
+            categories = []
+            for category, skills in result["job_skill_map"].items():
+                total = len(skills)
+                found = sum(1 for s in skills if s in result["matched"])
+                categories.append({"Category": category, "Matched": found, "Missing": total - found, "Coverage %": round(found / total * 100, 1) if total else 0})
+            if categories:
+                cat_df = pd.DataFrame(categories)
+                st.dataframe(cat_df, use_container_width=True, hide_index=True)
+                fig = px.bar(cat_df, x="Category", y=["Matched", "Missing"], barmode="group", title="Coverage by skill category")
+                st.plotly_chart(chart_layout(fig), use_container_width=True)
+            else:
+                st.info("No categorized skills were detected.")
+        with tabs[3]:
+            st.text_area("Extracted CV text (read-only preview)", result["cv_text"], height=300, disabled=True)
+
 elif page == "🧭 Action plan":
     if not result:
         st.info("Run an analysis first from **Analyze CV**.")
