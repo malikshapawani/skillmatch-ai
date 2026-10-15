@@ -117,6 +117,64 @@ st.markdown(
     [data-testid="stMetric"] {{ background: var(--sm-panel); border:1px solid var(--sm-border);
       padding: 14px; border-radius: 14px; }}
     [data-testid="stDataFrame"] {{ border: 1px solid var(--sm-border); border-radius: 12px; }}
+    
+/* Highlight buttons */
+.stButton > button {{
+    background: linear-gradient(135deg, #087f5b, #20b878) !important;
+    color: #ffffff !important;
+    border: 1px solid #48c78e !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    padding: 0.65rem 1rem !important;
+    box-shadow: 0 4px 12px rgba(16, 130, 82, 0.18);
+    transition: all 0.2s ease-in-out;
+}}
+
+.stButton > button:hover {{
+    background: linear-gradient(135deg, #066747, #16a36a) !important;
+    border-color: #70e0aa !important;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 18px rgba(16, 130, 82, 0.28);
+}}
+
+/* Highlight cards */
+[data-testid="stVerticalBlockBorderWrapper"] {{
+    border: 1px solid var(--sm-border) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 5px 16px rgba(16, 100, 65, 0.08);
+    transition: all 0.2s ease-in-out;
+}}
+
+[data-testid="stVerticalBlockBorderWrapper"]:hover {{
+    border-color: #39b77a !important;
+    box-shadow: 0 8px 22px rgba(16, 130, 82, 0.16);
+}}
+
+/* Highlight input fields */
+[data-testid="stTextInput"] input,
+[data-testid="stTextArea"] textarea {{
+    border: 1px solid var(--sm-border) !important;
+    border-radius: 10px !important;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}}
+
+[data-testid="stTextInput"] input:focus,
+[data-testid="stTextArea"] textarea:focus {{
+    border-color: #20b878 !important;
+    box-shadow: 0 0 0 3px rgba(32, 184, 120, 0.18) !important;
+}}
+
+/* Highlight dropdowns */
+[data-baseweb="select"] > div {{
+    border-radius: 10px !important;
+    border-color: var(--sm-border) !important;
+}}
+
+[data-baseweb="select"] > div:focus-within {{
+    border-color: #20b878 !important;
+    box-shadow: 0 0 0 2px rgba(32, 184, 120, 0.18) !important;
+}}
+
     </style>
     """,
     unsafe_allow_html=True,
