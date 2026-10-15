@@ -11,7 +11,7 @@ import streamlit as st
 from src.pdf_parser import extract_text_from_pdf
 from src.skill_extractor import find_skills
 from src.matching import calculate_similarity
-
+from ai_cv_improver import generate_cv_improvements
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
@@ -274,11 +274,21 @@ with st.sidebar:
     st.markdown("## 🎯 SkillMatch AI")
     st.caption("CAREER INTELLIGENCE WORKSPACE")
     st.selectbox("Appearance", ["Light", "Dark"], key="ui_theme")
-    page = st.radio(
-        "Workspace",
-        ["🏠 Overview", "🔎 Analyze CV", "📊 Insights", "🧭 Action plan", "📄 Export report", "ℹ️ About"],
-        label_visibility="visible",
-    )
+    
+page = st.radio(
+    "Workspace",
+    [
+        "🏠 Overview",
+        "🔎 Analyze CV",
+        "📊 Insights",
+        "🧭 Action plan",
+        "✨ AI CV Improvement",
+        "📄 Export report",
+        "ℹ️ About",
+    ],
+    label_visibility="visible",
+)
+
     st.divider()
     st.markdown("**Analysis workflow**")
     st.caption("1. Upload CV PDF\n\n2. Paste the target job\n\n3. Analyze gaps\n\n4. Export your report")
