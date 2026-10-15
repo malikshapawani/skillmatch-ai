@@ -58,7 +58,7 @@ st.markdown(
       color: var(--sm-text);
     }}
     [data-testid="stHeader"] {{ background: transparent; }}
-    .block-container {{ max-width: 1500px; padding-top: 1rem; padding-bottom: 3rem; }}
+    .block-container {{ max-width: 1400px; padding-top: 1.5rem; padding-bottom: 3rem; }}
     h1, h2, h3, h4, p, label, .stMarkdown, [data-testid="stCaptionContainer"] {{
       color: var(--sm-text);
     }}
@@ -94,25 +94,8 @@ st.markdown(
     .stButton > button[kind="primary"] {{
       background: linear-gradient(100deg, #176B3D, #36A85D); color: white; border: 0;
     }}
-    [data-testid="stSidebar"] {{
-      background: var(--sm-panel) !important;
-      border-right: 1px solid var(--sm-border);
-    }}
+    [data-testid="stSidebar"] {{ background: var(--sm-panel); border-right: 1px solid var(--sm-border); }}
     [data-testid="stSidebar"] * {{ color: var(--sm-text); }}
-    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
-    [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] p,
-    [data-testid="stSidebar"] span {{
-      color: var(--sm-text) !important;
-    }}
-    [data-testid="stSidebar"] [role="radiogroup"] label {{
-      background: transparent;
-      border-radius: 10px;
-      padding: 5px 8px;
-    }}
-    [data-testid="stSidebar"] [role="radiogroup"] label:hover {{
-      background: var(--sm-panel2);
-    }}
     [data-testid="stFileUploader"], [data-testid="stTextArea"] {{
       background: var(--sm-panel); border-radius: 14px;
     }}
@@ -120,6 +103,60 @@ st.markdown(
     [data-testid="stMetric"] {{ background: var(--sm-panel); border:1px solid var(--sm-border);
       padding: 14px; border-radius: 14px; }}
     [data-testid="stDataFrame"] {{ border: 1px solid var(--sm-border); border-radius: 12px; }}
+
+    /* Brand and balanced dashboard layout */
+    .block-container {{ max-width: 1520px; padding-top: 1.15rem; padding-bottom: 3rem; }}
+    .brand-lockup {{ display:flex; align-items:center; gap:10px; margin:3px 0 8px 0; }}
+    .brand-mark {{
+      display:flex; align-items:center; justify-content:center; width:38px; height:38px;
+      border-radius:12px; color:#071A12 !important; font-size:1.45rem; font-weight:900;
+      background:linear-gradient(135deg,#7CFFB2,#20D879);
+      box-shadow:0 0 18px rgba(32,216,121,.28);
+    }}
+    .brand-lockup strong {{ display:block; color:var(--sm-text) !important; font-size:1.08rem; }}
+    .brand-lockup small {{ display:block; color:var(--sm-muted) !important; font-size:.62rem; letter-spacing:.09em; margin-top:2px; }}
+    .hero {{
+      position:relative; overflow:hidden;
+      background:linear-gradient(115deg,#073B27 0%,#087F4F 48%,#27C879 100%);
+      border:1px solid rgba(125,255,178,.25);
+      box-shadow:0 16px 42px rgba(18,112,62,.20), inset 0 1px 0 rgba(255,255,255,.12);
+    }}
+    .hero:after {{
+      content:""; position:absolute; width:240px; height:240px; right:-65px; top:-115px;
+      border-radius:50%; background:rgba(170,255,205,.13); filter:blur(2px);
+    }}
+    .panel {{ box-shadow:0 8px 24px rgba(10,70,38,.07); }}
+    .panel h3 {{ font-size:1.08rem; margin-top:0; }}
+    [data-testid="stSidebar"] {{ box-shadow:8px 0 28px rgba(0,0,0,.04); }}
+    [data-testid="stSidebar"] [data-testid="stRadio"] > label {{
+      color:var(--sm-muted) !important; font-size:.72rem; font-weight:800; letter-spacing:.1em;
+    }}
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] {{ gap:5px; }}
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label {{
+      border:1px solid transparent; border-radius:11px; padding:8px 10px; transition:all .18s ease;
+    }}
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:hover {{
+      background:var(--sm-panel2); border-color:var(--sm-border);
+    }}
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) {{
+      background:var(--sm-panel2); border-color:#2AC879;
+      box-shadow:inset 3px 0 0 #2AC879, 0 0 15px rgba(42,200,121,.08);
+    }}
+
+    /* Luminous green buttons */
+    .stButton > button, [data-testid="stDownloadButton"] button {{
+      border:1px solid rgba(42,200,121,.65) !important;
+      border-radius:12px !important; font-weight:750 !important; min-height:44px;
+      transition:all .2s ease-in-out;
+    }}
+    .stButton > button[kind="primary"], [data-testid="stDownloadButton"] button {{
+      background:linear-gradient(115deg,#087F4F,#19B96C) !important;
+      color:#FFFFFF !important; box-shadow:0 5px 16px rgba(25,185,108,.18);
+    }}
+    .stButton > button:hover, [data-testid="stDownloadButton"] button:hover {{
+      border-color:#7CFFB2 !important; transform:translateY(-2px);
+      box-shadow:0 8px 22px rgba(32,216,121,.26);
+    }}
 
     /* Clear text in disabled CV preview in both themes */
     [data-testid="stTextArea"] textarea:disabled {{
@@ -224,9 +261,25 @@ st.markdown(
       border-color: var(--sm-border) !important;
     }}
     [data-baseweb="select"] > div:focus-within {{
-      border-color: #20B878 !important;
-      box-shadow: 0 0 0 2px rgba(32, 184, 120, .18) !important;
+      border-color:#20B878 !important;
+      box-shadow:0 0 0 2px rgba(32,184,120,.18) !important;
     }}
+    [data-baseweb="popover"], [data-baseweb="menu"] {{
+      background:var(--sm-panel) !important; border:1px solid var(--sm-border) !important;
+      border-radius:12px !important; box-shadow:0 12px 30px rgba(0,0,0,.18) !important;
+    }}
+    [role="option"] {{ color:var(--sm-text) !important; }}
+    [role="option"]:hover {{ background:var(--sm-panel2) !important; }}
+    [data-testid="stMetric"] {{
+      border:1px solid var(--sm-border) !important; border-radius:16px !important;
+      box-shadow:0 7px 22px rgba(32,184,120,.07);
+    }}
+    [data-testid="stTabs"] button[aria-selected="true"] {{
+      border-bottom:2px solid #2AC879 !important; color:var(--sm-text) !important;
+    }}
+    .priority-badge.high {{ box-shadow:0 0 12px rgba(229,79,95,.12); }}
+    .priority-badge.medium {{ box-shadow:0 0 12px rgba(230,165,38,.12); }}
+    .priority-badge.low {{ box-shadow:0 0 12px rgba(44,166,111,.12); }}
     </style>
     """,
     unsafe_allow_html=True,
@@ -387,19 +440,24 @@ def html_report(result):
 def chart_layout(fig):
     fig.update_layout(
         paper_bgcolor=PANEL, plot_bgcolor=PANEL, font_color=TEXT,
+        colorway=["#24D17E", "#8B5CF6", "#22D3EE", "#FBBF24", "#FB7185"],
         margin=dict(l=10, r=10, t=35, b=10), legend_title_text="",
     )
-    fig.update_xaxes(gridcolor=BORDER, zerolinecolor=BORDER)
-    fig.update_yaxes(gridcolor=BORDER, zerolinecolor=BORDER)
+    fig.update_xaxes(gridcolor=BORDER, zerolinecolor=BORDER, tickfont_color=TEXT, title_font_color=TEXT)
+    fig.update_yaxes(gridcolor=BORDER, zerolinecolor=BORDER, tickfont_color=TEXT, title_font_color=TEXT)
     return fig
 
 # ---------------- SIDEBAR ----------------
 with st.sidebar:
-    st.markdown("## 🎯 SkillMatch AI")
-    st.caption("CAREER INTELLIGENCE WORKSPACE")
+    st.markdown(
+        '<div class="brand-lockup"><span class="brand-mark">✦</span>'
+        '<span><strong>SkillMatch AI</strong><small>CAREER INTELLIGENCE</small></span></div>',
+        unsafe_allow_html=True,
+    )
+    st.caption("YOUR CAREER WORKSPACE")
 
     page = st.radio(
-        "Workspace",
+        "WORKSPACE",
         [
             "🏠 Overview",
             "🔎 Analyze CV",
@@ -410,11 +468,10 @@ with st.sidebar:
             "ℹ️ About",
         ],
         label_visibility="visible",
-        key="workspace_page",
     )
 
     st.divider()
-    st.markdown("### Appearance")
+    st.markdown("#### Appearance")
     st.selectbox(
         "Choose theme",
         ["Light", "Dark"],
@@ -423,23 +480,13 @@ with st.sidebar:
     )
 
     st.divider()
-    st.markdown("**Analysis workflow**")
-    st.caption(
-        "1. Upload CV PDF\\n\\n"
-        "2. Paste the target job\\n\\n"
-        "3. Analyze gaps\\n\\n"
-        "4. Export your report"
-    )
-
-    if st.button("Reset current analysis", use_container_width=True):
+    st.markdown("#### Analysis workflow")
+    st.caption("1. Upload CV PDF\\n\\n2. Paste the target job\\n\\n3. Analyze gaps\\n\\n4. Export your report")
+    if st.button("↻ Reset current analysis", use_container_width=True):
         st.session_state.analysis = None
         st.session_state.pop("ai_cv_suggestions", None)
         st.rerun()
-
-    st.caption(
-        "Privacy: this demo processes the uploaded PDF in app memory "
-        "and does not intentionally save it to a database."
-    )
+    st.caption("Privacy: uploaded CV text is processed for this session. Review the AI provider's terms before sending CV content to Gemini.")
 
 # ---------------- HERO ----------------
 st.markdown(
