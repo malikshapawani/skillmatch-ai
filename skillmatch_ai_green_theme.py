@@ -94,8 +94,22 @@ st.markdown(
     .stButton > button[kind="primary"] {{
       background: linear-gradient(100deg, #176B3D, #36A85D); color: white; border: 0;
     }}
-    [data-testid="stSidebar"] {{ background: var(--sm-panel); border-right: 1px solid var(--sm-border); }}
-    [data-testid="stSidebar"] * {{ color: var(--sm-text); }}
+    [data-testid="stSidebar"] {{
+    background: var(--sm-panel) !important;
+    border-right: 1px solid var(--sm-border);
+    }}
+    
+    [data-testid="stSidebar"] * {{
+    color: var(--sm-text) !important;
+    }}
+    
+    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] span {{
+    color: var(--sm-text) !important;
+    }}
+
     [data-testid="stFileUploader"], [data-testid="stTextArea"] {{
       background: var(--sm-panel); border-radius: 14px;
     }}
@@ -269,33 +283,53 @@ def chart_layout(fig):
     fig.update_yaxes(gridcolor=BORDER, zerolinecolor=BORDER)
     return fig
 
+
+
 # ---------------- SIDEBAR ----------------
 with st.sidebar:
     st.markdown("## 🎯 SkillMatch AI")
     st.caption("CAREER INTELLIGENCE WORKSPACE")
-    st.selectbox("Appearance", ["Light", "Dark"], key="ui_theme")
-    
-page = st.radio(
-    "Workspace",
-    [
-        "🏠 Overview",
-        "🔎 Analyze CV",
-        "📊 Insights",
-        "🧭 Action plan",
-        "✨ AI CV Improvement",
-        "📄 Export report",
-        "ℹ️ About",
-    ],
-    label_visibility="visible",
-)
 
-st.divider()
-st.markdown("**Analysis workflow**")
-st.caption("1. Upload CV PDF\n\n2. Paste the target job\n\n3. Analyze gaps\n\n4. Export your report")
-if st.button("Reset current analysis", use_container_width=True):
-    st.session_state.analysis = None
-    st.rerun()
-    st.caption("Privacy: this demo processes the uploaded PDF in app memory and does not intentionally save it to a database.")
+    page = st.radio(
+        "Workspace",
+        [
+            "🏠 Overview",
+            "🔎 Analyze CV",
+            "📊 Insights",
+            "🧭 Action plan",
+            "✨ AI CV Improvement",
+            "📄 Export report",
+            "ℹ️ About",
+        ],
+        label_visibility="visible",
+    )
+
+    st.divider()
+    st.markdown("### Appearance")
+    st.selectbox(
+        "Choose theme",
+        ["Light", "Dark"],
+        key="ui_theme",
+        label_visibility="collapsed",
+    )
+
+    st.divider()
+    st.markdown("**Analysis workflow**")
+    st.caption(
+        "1. Upload CV PDF\n\n"
+        "2. Paste the target job\n\n"
+        "3. Analyze gaps\n\n"
+        "4. Export your report"
+    )
+
+    if st.button("Reset current analysis", use_container_width=True):
+        st.session_state.analysis = None
+        st.rerun()
+
+    st.caption(
+        "Privacy: this demo processes the uploaded PDF in app memory "
+        "and does not intentionally save it to a database."
+    )
 
 # ---------------- HERO ----------------
 st.markdown(
