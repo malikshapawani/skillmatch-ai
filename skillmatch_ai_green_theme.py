@@ -175,6 +175,133 @@ st.markdown(
     box-shadow: 0 0 0 2px rgba(32, 184, 120, 0.18) !important;
 }}
 
+
+/* Make all text in disabled CV preview readable */
+[data-testid="stTextArea"] textarea:disabled {{
+    color: var(--sm-text) !important;
+    -webkit-text-fill-color: var(--sm-text) !important;
+    opacity: 1 !important;
+    background: var(--sm-input) !important;
+    border: 1px solid var(--sm-border) !important;
+}}
+
+/* Improve text contrast inside cards */
+.panel h3,
+.panel p,
+.metric-label,
+.metric-foot {{
+    color: var(--sm-text) !important;
+}}
+
+.metric-foot {{
+    color: var(--sm-muted) !important;
+}}
+
+/* Make information and warning boxes clearer */
+[data-testid="stAlert"] {{
+    border: 1px solid var(--sm-border) !important;
+    border-radius: 14px !important;
+}}
+
+/* Highlight overview cards */
+.panel {{
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}}
+
+.panel:hover {{
+    transform: translateY(-3px);
+    border-color: #39B77A !important;
+    box-shadow: 0 10px 25px rgba(32, 184, 120, 0.18);
+}}
+
+/* Highlight report download buttons */
+[data-testid="stDownloadButton"] button {{
+    border-radius: 12px !important;
+    border: 1px solid #39B77A !important;
+    font-weight: 650 !important;
+    min-height: 44px;
+}}
+
+
+/* Action plan priority cards */
+.priority-card {{
+    background: var(--sm-panel);
+    border: 1px solid var(--sm-border);
+    border-left: 5px solid var(--sm-accent);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin: 12px 0;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}}
+
+.priority-card:hover {{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(32, 184, 120, 0.14);
+}}
+
+.priority-card h4 {{
+    color: var(--sm-text) !important;
+    margin: 14px 0 8px 0;
+    font-size: 1.08rem;
+}}
+
+.priority-card p {{
+    color: var(--sm-muted) !important;
+    line-height: 1.7;
+    margin-bottom: 2px;
+}}
+
+.priority-top {{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}}
+
+.priority-badge {{
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}}
+
+.priority-badge.high {{
+    background: #FCE7E7;
+    color: #A51D2D;
+}}
+
+.priority-badge.medium {{
+    background: #FFF1CC;
+    color: #805600;
+}}
+
+.priority-badge.low {{
+    background: #DDF7E8;
+    color: #176B3D;
+}}
+
+.priority-card.high {{
+    border-left-color: #E34F5F;
+}}
+
+.priority-card.medium {{
+    border-left-color: #E6A526;
+}}
+
+.priority-card.low {{
+    border-left-color: #2CA66F;
+}}
+
+.priority-step {{
+    color: var(--sm-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+}}
+
+
     </style>
     """,
     unsafe_allow_html=True,
@@ -579,19 +706,28 @@ elif page == "🧭 Action plan":
     else:
         st.subheader("Your prioritized improvement plan")
         st.write("Start with the highest-impact changes. Suggestions are based on detected text signals; verify each one against your actual experience.")
+        
         for i, (priority, title, detail) in enumerate(result["recommendations"], 1):
-            with st.container(border=True):
-                col1, col2 = st.columns([0.18, 0.82])
-                with col1:
-                    if priority == "High":
-                        st.error("HIGH")
-                    elif priority == "Medium":
-                        st.warning("MEDIUM")
-                    else:
-                        st.info("LOW")
-                with col2:
-                    st.markdown(f"**{i}. {title}**")
-                    st.write(detail)
+            priority_class = priority.strip().lower()
+if priority_class not in ("high", "medium", "low"):
+    priority_class = "medium"
+
+            st.markdown(
+                f"""
+                <div class="priority-card {priority_class}">
+                    <div class="priority-top">
+                        <span class="priority-badge {priority_class}">
+                            {priority.upper()} PRIORITY
+                        </span>
+                        <span class="priority-step">STEP {i:02d}</span>
+                    </div>
+                    <h4>{html.escape(title)}</h4>
+                    <p>{html.escape(detail)}</p>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
         st.markdown("#### Suggested learning focus")
         if result["missing"]:
             st.write("Review these gaps first, especially those marked High in the Insights table:")
