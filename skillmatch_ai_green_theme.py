@@ -94,22 +94,8 @@ st.markdown(
     .stButton > button[kind="primary"] {{
       background: linear-gradient(100deg, #176B3D, #36A85D); color: white; border: 0;
     }}
-    [data-testid="stSidebar"] {{
-    background: var(--sm-panel) !important;
-    border-right: 1px solid var(--sm-border);
-    }}
-    
-    [data-testid="stSidebar"] * {{
-    color: var(--sm-text) !important;
-    }}
-    
-    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
-    [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] p,
-    [data-testid="stSidebar"] span {{
-    color: var(--sm-text) !important;
-    }}
-
+    [data-testid="stSidebar"] {{ background: var(--sm-panel); border-right: 1px solid var(--sm-border); }}
+    [data-testid="stSidebar"] * {{ color: var(--sm-text); }}
     [data-testid="stFileUploader"], [data-testid="stTextArea"] {{
       background: var(--sm-panel); border-radius: 14px;
     }}
@@ -117,191 +103,113 @@ st.markdown(
     [data-testid="stMetric"] {{ background: var(--sm-panel); border:1px solid var(--sm-border);
       padding: 14px; border-radius: 14px; }}
     [data-testid="stDataFrame"] {{ border: 1px solid var(--sm-border); border-radius: 12px; }}
-    
-/* Highlight buttons */
-.stButton > button {{
-    background: linear-gradient(135deg, #087f5b, #20b878) !important;
-    color: #ffffff !important;
-    border: 1px solid #48c78e !important;
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    padding: 0.65rem 1rem !important;
-    box-shadow: 0 4px 12px rgba(16, 130, 82, 0.18);
-    transition: all 0.2s ease-in-out;
-}}
 
-.stButton > button:hover {{
-    background: linear-gradient(135deg, #066747, #16a36a) !important;
-    border-color: #70e0aa !important;
-    transform: translateY(-2px);
-    box-shadow: 0 7px 18px rgba(16, 130, 82, 0.28);
-}}
+    /* Clear text in disabled CV preview in both themes */
+    [data-testid="stTextArea"] textarea:disabled {{
+      color: var(--sm-text) !important;
+      -webkit-text-fill-color: var(--sm-text) !important;
+      opacity: 1 !important;
+      background: var(--sm-input) !important;
+      border: 1px solid var(--sm-border) !important;
+    }}
 
-/* Highlight cards */
-[data-testid="stVerticalBlockBorderWrapper"] {{
-    border: 1px solid var(--sm-border) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 5px 16px rgba(16, 100, 65, 0.08);
-    transition: all 0.2s ease-in-out;
-}}
+    /* Buttons */
+    .stButton > button, [data-testid="stDownloadButton"] button {{
+      border-radius: 12px !important;
+      font-weight: 700 !important;
+      min-height: 44px;
+      transition: all .2s ease-in-out;
+    }}
+    .stButton > button:hover, [data-testid="stDownloadButton"] button:hover {{
+      border-color: #39B77A !important;
+      transform: translateY(-2px);
+      box-shadow: 0 7px 18px rgba(16, 130, 82, .20);
+    }}
 
-[data-testid="stVerticalBlockBorderWrapper"]:hover {{
-    border-color: #39b77a !important;
-    box-shadow: 0 8px 22px rgba(16, 130, 82, 0.16);
-}}
+    /* Cards */
+    .panel {{
+      transition: transform .2s ease, box-shadow .2s ease;
+    }}
+    .panel:hover {{
+      transform: translateY(-3px);
+      border-color: #39B77A !important;
+      box-shadow: 0 10px 25px rgba(32, 184, 120, .16);
+    }}
+    [data-testid="stVerticalBlockBorderWrapper"] {{
+      border: 1px solid var(--sm-border) !important;
+      border-radius: 16px !important;
+      box-shadow: 0 5px 16px rgba(0, 0, 0, .06);
+    }}
 
-/* Highlight input fields */
-[data-testid="stTextInput"] input,
-[data-testid="stTextArea"] textarea {{
-    border: 1px solid var(--sm-border) !important;
-    border-radius: 10px !important;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}}
+    /* Action plan priority cards */
+    .priority-card {{
+      background: var(--sm-panel);
+      color: var(--sm-text);
+      border: 1px solid var(--sm-border);
+      border-left: 5px solid var(--sm-accent);
+      border-radius: 16px;
+      padding: 20px 22px;
+      margin: 12px 0;
+      box-shadow: 0 5px 18px rgba(0, 0, 0, .06);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }}
+    .priority-card:hover {{
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(32, 184, 120, .14);
+    }}
+    .priority-card h4 {{
+      color: var(--sm-text) !important;
+      margin: 14px 0 8px 0;
+      font-size: 1.08rem;
+    }}
+    .priority-card p {{
+      color: var(--sm-muted) !important;
+      line-height: 1.7;
+      margin-bottom: 2px;
+    }}
+    .priority-top {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }}
+    .priority-badge {{
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }}
+    .priority-badge.high {{ background: #FCE7E7; color: #A51D2D !important; }}
+    .priority-badge.medium {{ background: #FFF1CC; color: #805600 !important; }}
+    .priority-badge.low {{ background: #DDF7E8; color: #176B3D !important; }}
+    .priority-card.high {{ border-left-color: #E34F5F; }}
+    .priority-card.medium {{ border-left-color: #E6A526; }}
+    .priority-card.low {{ border-left-color: #2CA66F; }}
+    .priority-step {{ color: var(--sm-muted); font-size: .75rem; font-weight: 700; }}
 
-[data-testid="stTextInput"] input:focus,
-[data-testid="stTextArea"] textarea:focus {{
-    border-color: #20b878 !important;
-    box-shadow: 0 0 0 3px rgba(32, 184, 120, 0.18) !important;
-}}
-
-/* Highlight dropdowns */
-[data-baseweb="select"] > div {{
-    border-radius: 10px !important;
-    border-color: var(--sm-border) !important;
-}}
-
-[data-baseweb="select"] > div:focus-within {{
-    border-color: #20b878 !important;
-    box-shadow: 0 0 0 2px rgba(32, 184, 120, 0.18) !important;
-}}
-
-
-/* Make all text in disabled CV preview readable */
-[data-testid="stTextArea"] textarea:disabled {{
-    color: var(--sm-text) !important;
-    -webkit-text-fill-color: var(--sm-text) !important;
-    opacity: 1 !important;
-    background: var(--sm-input) !important;
-    border: 1px solid var(--sm-border) !important;
-}}
-
-/* Improve text contrast inside cards */
-.panel h3,
-.panel p,
-.metric-label,
-.metric-foot {{
-    color: var(--sm-text) !important;
-}}
-
-.metric-foot {{
-    color: var(--sm-muted) !important;
-}}
-
-/* Make information and warning boxes clearer */
-[data-testid="stAlert"] {{
-    border: 1px solid var(--sm-border) !important;
-    border-radius: 14px !important;
-}}
-
-/* Highlight overview cards */
-.panel {{
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}}
-
-.panel:hover {{
-    transform: translateY(-3px);
-    border-color: #39B77A !important;
-    box-shadow: 0 10px 25px rgba(32, 184, 120, 0.18);
-}}
-
-/* Highlight report download buttons */
-[data-testid="stDownloadButton"] button {{
-    border-radius: 12px !important;
-    border: 1px solid #39B77A !important;
-    font-weight: 650 !important;
-    min-height: 44px;
-}}
-
-
-/* Action plan priority cards */
-.priority-card {{
-    background: var(--sm-panel);
-    border: 1px solid var(--sm-border);
-    border-left: 5px solid var(--sm-accent);
-    border-radius: 16px;
-    padding: 20px 22px;
-    margin: 12px 0;
-    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}}
-
-.priority-card:hover {{
-    transform: translateY(-2px);
-    box-shadow: 0 10px 24px rgba(32, 184, 120, 0.14);
-}}
-
-.priority-card h4 {{
-    color: var(--sm-text) !important;
-    margin: 14px 0 8px 0;
-    font-size: 1.08rem;
-}}
-
-.priority-card p {{
-    color: var(--sm-muted) !important;
-    line-height: 1.7;
-    margin-bottom: 2px;
-}}
-
-.priority-top {{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}}
-
-.priority-badge {{
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-}}
-
-.priority-badge.high {{
-    background: #FCE7E7;
-    color: #A51D2D;
-}}
-
-.priority-badge.medium {{
-    background: #FFF1CC;
-    color: #805600;
-}}
-
-.priority-badge.low {{
-    background: #DDF7E8;
-    color: #176B3D;
-}}
-
-.priority-card.high {{
-    border-left-color: #E34F5F;
-}}
-
-.priority-card.medium {{
-    border-left-color: #E6A526;
-}}
-
-.priority-card.low {{
-    border-left-color: #2CA66F;
-}}
-
-.priority-step {{
-    color: var(--sm-muted);
-    font-size: 0.75rem;
-    font-weight: 700;
-}}
-
-
+    /* Alerts and form controls */
+    [data-testid="stAlert"] {{
+      border: 1px solid var(--sm-border) !important;
+      border-radius: 14px !important;
+    }}
+    [data-testid="stTextInput"] input, [data-testid="stTextArea"] textarea {{
+      border: 1px solid var(--sm-border) !important;
+      border-radius: 10px !important;
+    }}
+    [data-testid="stTextInput"] input:focus, [data-testid="stTextArea"] textarea:focus {{
+      border-color: #20B878 !important;
+      box-shadow: 0 0 0 3px rgba(32, 184, 120, .18) !important;
+    }}
+    [data-baseweb="select"] > div {{
+      border-radius: 10px !important;
+      border-color: var(--sm-border) !important;
+    }}
+    [data-baseweb="select"] > div:focus-within {{
+      border-color: #20B878 !important;
+      box-shadow: 0 0 0 2px rgba(32, 184, 120, .18) !important;
+    }}
     </style>
     """,
     unsafe_allow_html=True,
@@ -468,53 +376,33 @@ def chart_layout(fig):
     fig.update_yaxes(gridcolor=BORDER, zerolinecolor=BORDER)
     return fig
 
-
-
 # ---------------- SIDEBAR ----------------
 with st.sidebar:
     st.markdown("## 🎯 SkillMatch AI")
     st.caption("CAREER INTELLIGENCE WORKSPACE")
-
-    page = st.radio(
-        "Workspace",
-        [
-            "🏠 Overview",
-            "🔎 Analyze CV",
-            "📊 Insights",
-            "🧭 Action plan",
-            "✨ AI CV Improvement",
-            "📄 Export report",
-            "ℹ️ About",
-        ],
-        label_visibility="visible",
-    )
-
-    st.divider()
-    st.markdown("### Appearance")
-    st.selectbox(
-        "Choose theme",
-        ["Light", "Dark"],
-        key="ui_theme",
-        label_visibility="collapsed",
-    )
-
+    st.selectbox("Appearance", ["Light", "Dark"], key="ui_theme")
     st.divider()
     st.markdown("**Analysis workflow**")
-    st.caption(
-        "1. Upload CV PDF\n\n"
-        "2. Paste the target job\n\n"
-        "3. Analyze gaps\n\n"
-        "4. Export your report"
-    )
-
+    st.caption("1. Upload CV PDF\n\n2. Paste the target job\n\n3. Analyze gaps\n\n4. Export your report")
     if st.button("Reset current analysis", use_container_width=True):
         st.session_state.analysis = None
+        st.session_state.pop("ai_cv_suggestions", None)
         st.rerun()
+    st.caption("Privacy: this demo processes the uploaded PDF in app memory and does not intentionally save it to a database.")
 
-    st.caption(
-        "Privacy: this demo processes the uploaded PDF in app memory "
-        "and does not intentionally save it to a database."
-    )
+page = st.radio(
+    "Workspace",
+    [
+        "🏠 Overview",
+        "🔎 Analyze CV",
+        "📊 Insights",
+        "🧭 Action plan",
+        "✨ AI CV Improvement",
+        "📄 Export report",
+        "ℹ️ About",
+    ],
+    label_visibility="visible",
+)
 
 # ---------------- HERO ----------------
 st.markdown(
@@ -706,28 +594,26 @@ elif page == "🧭 Action plan":
     else:
         st.subheader("Your prioritized improvement plan")
         st.write("Start with the highest-impact changes. Suggestions are based on detected text signals; verify each one against your actual experience.")
-        
         for i, (priority, title, detail) in enumerate(result["recommendations"], 1):
-            priority_class = priority.strip().lower()
-if priority_class not in ("high", "medium", "low"):
-    priority_class = "medium"
+            priority_class = str(priority).strip().lower()
+            if priority_class not in ("high", "medium", "low"):
+                priority_class = "medium"
 
             st.markdown(
                 f"""
                 <div class="priority-card {priority_class}">
                     <div class="priority-top">
                         <span class="priority-badge {priority_class}">
-                            {priority.upper()} PRIORITY
+                            {html.escape(priority_class.upper())} PRIORITY
                         </span>
                         <span class="priority-step">STEP {i:02d}</span>
                     </div>
-                    <h4>{html.escape(title)}</h4>
-                    <p>{html.escape(detail)}</p>
+                    <h4>{html.escape(str(title))}</h4>
+                    <p>{html.escape(str(detail))}</p>
                 </div>
                 """,
                 unsafe_allow_html=True,
             )
-
         st.markdown("#### Suggested learning focus")
         if result["missing"]:
             st.write("Review these gaps first, especially those marked High in the Insights table:")
@@ -735,6 +621,50 @@ if priority_class not in ("high", "medium", "low"):
             st.caption("A gap means the skill was not detected in the CV text. It does not prove you lack the skill.")
         else:
             st.success("No missing skills from the current skill dictionary were detected. Review whether the CV gives concrete evidence for each requirement.")
+
+elif page == "✨ AI CV Improvement":
+    st.subheader("✨ AI-powered CV Improvement")
+    st.write(
+        "Get personalized CV improvement suggestions "
+        "based on your uploaded CV and target job description."
+    )
+
+    if not result:
+        st.info(
+            "Please go to Analyze CV, upload your PDF, "
+            "enter a job description, and run the analysis first."
+        )
+    else:
+        st.success(f"CV ready: {result['filename']}")
+        st.caption(
+            "Your CV text and job description will be sent to "
+            "Google Gemini to generate improvement suggestions. "
+            "Use a CV with personal contact details removed when testing."
+        )
+
+        if st.button(
+            "✨ Improve My CV",
+            type="primary",
+            use_container_width=True,
+        ):
+            with st.spinner("Gemini is reviewing your CV..."):
+                suggestions = generate_cv_improvements(
+                    result["cv_text"],
+                    result["job_description"],
+                )
+            st.session_state["ai_cv_suggestions"] = suggestions
+
+        suggestions = st.session_state.get("ai_cv_suggestions")
+        if suggestions:
+            st.markdown("### Your AI improvement recommendations")
+            st.markdown(suggestions)
+            st.download_button(
+                "⬇️ Download AI recommendations",
+                data=suggestions,
+                file_name="skillmatch_ai_cv_improvements.txt",
+                mime="text/plain",
+                use_container_width=True,
+            )
 
 elif page == "📄 Export report":
     if not result:
