@@ -289,12 +289,12 @@ page = st.radio(
     label_visibility="visible",
 )
 
-    st.divider()
-    st.markdown("**Analysis workflow**")
-    st.caption("1. Upload CV PDF\n\n2. Paste the target job\n\n3. Analyze gaps\n\n4. Export your report")
-    if st.button("Reset current analysis", use_container_width=True):
-        st.session_state.analysis = None
-        st.rerun()
+st.divider()
+st.markdown("**Analysis workflow**")
+st.caption("1. Upload CV PDF\n\n2. Paste the target job\n\n3. Analyze gaps\n\n4. Export your report")
+if st.button("Reset current analysis", use_container_width=True):
+    st.session_state.analysis = None
+    st.rerun()
     st.caption("Privacy: this demo processes the uploaded PDF in app memory and does not intentionally save it to a database.")
 
 # ---------------- HERO ----------------
