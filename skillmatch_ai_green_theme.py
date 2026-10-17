@@ -1,132 +1,100 @@
 
     
   
-    else:
-        st.success(f"CV ready: {result['filename']}")
-        st.caption(
-            "Your CV text and job description will be sent to "
-            "Google Gemini to generate improvement suggestions. "
-            "Use a CV with personal contact details removed when testing."
-        )
+import html
+import json
+import re
+from datetime import datetime
 
-        if st.button(
-            "✨ Improve My CV",
-            type="primary",
-            use_container_width=True,
-        ):
-            with st.spinner("Gemini is reviewing your CV..."):
-                suggestions = generate_cv_improvements(
-                    result["cv_text"],
-                    result["job_description"],
-                )
-            st.session_state["ai_cv_suggestions"] = suggestions
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+import streamlit as st
 
-        suggestions = st.session_state.get("ai_cv_suggestions")
-        if suggestions:
-            st.markdown("### Your AI improvement recommendations")
-            st.markdown(suggestions)
-            st.download_button(
-                "⬇️ Download AI recommendations",
-                data=suggestions,
-                file_name="skillmatch_ai_cv_improvements.txt",
-                mime="text/plain",
-                use_container_width=True,
-            )
+from src.pdf_parser import extract_text_from_pdf
+from src.skill_extractor import find_skills
+from src.matching import calculate_similarity
+from ai_cv_improver import generate_cv_improvements
 
-elif page == "📄 Export report":
-    if not result:
-        st.info("Run an analysis first from **Analyze CV**.")
-    else:
-        st.subheader("Export your analysis")
-        st.markdown(
-            '<div class="section-intro">Choose a format for your report. Review the contents before sharing, as reports may include details extracted from your CV.</div>',
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            """
-            <div class="export-card">
-              <span class="export-icon">📊</span>
-              <h3>Detailed analysis report</h3>
-              <p>Review match indicators, skill tables, and recommendations in a browser.</p>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        html_col, txt_col = st.columns(2, gap="large")
-        with html_col:
-            with st.container(border=True):
-                st.markdown("### 🌐 HTML report")
-                st.write("A styled report with metrics, skill tables, and recommendations.")
-                st.download_button(
-                    "⬇️ Download HTML report",
-                    data=html_report(result),
-                    file_name="skillmatch_ai_report.html",
-                    mime="text/html",
-                    type="primary",
-                    use_container_width=True,
-                )
-        with txt_col:
-            with st.container(border=True):
-                st.markdown("### 📝 Plain-text report")
-                st.write("A lightweight text summary for notes and records.")
-                st.download_button(
-                    "⬇️ Download TXT report",
-                    data=make_text_report(result),
-                    file_name="skillmatch_ai_report.txt",
-                    mime="text/plain",
-                    use_container_width=True,
-                )
-        if result["priority_rows"]:
-            csv_data = pd.DataFrame(result["priority_rows"])[["Skill", "Priority", "Status"]].to_csv(index=False).encode("utf-8")
-            with st.container(border=True):
-                st.markdown("### 🌿 Skill-gap data")
-                st.write("A CSV spreadsheet of detected skills, priorities, and match status.")
-                st.download_button(
-                    "⬇️ Download skill-gap CSV",
-                    data=csv_data,
-                    file_name="skillmatch_skill_gaps.csv",
-                    mime="text/csv",
-                    use_container_width=True,
-                )
-        st.caption("Available formats: HTML, TXT, and CSV. PDF export is not included in this version.")
+# ---------------- PAGE CONFIG ----------------
+st.set_page_config(
+    page_title="SkillMatch AI | Career Intelligence",
+    page_icon="🎯",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
-elif page == "ℹ️ About":
-    st.subheader("About SkillMatch AI")
-    st.markdown(
-        '<div class="section-intro">SkillMatch AI helps job seekers compare a text-based PDF CV with a target job description, understand detected gaps, and plan practical improvements.</div>',
-        unsafe_allow_html=True,
-    )
-    about_left, about_right = st.columns(2, gap="large")
-    with about_left:
-        st.markdown(
-            """
-            <div class="about-card components">
-              <h3>🌿 Current analysis components</h3>
-              <ul>
-                <li>PDF text extraction with PyMuPDF</li>
-                <li>Skill dictionary matching by category</li>
-                <li>TF-IDF and cosine similarity</li>
-                <li>Skill coverage and missing-skill identification</li>
-                <li>Heuristic ATS-readiness indicators</li>
-                <li>CV section checks and improvement suggestions</li>
-                <li>Interactive charts and HTML / TXT / CSV reports</li>
-              </ul>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with about_right:
-        st.markdown(
-            """
-            <div class="about-card limitations">
-              <h3>⚠️ Limitations</h3>
-              <ul>
-                <li>Skill detection depends on <code>data/skills.json</code>; unlisted skills may be missed.</li>
-                <li>Text similarity is not full semantic understanding of the job.</li>
-                <li>ATS readiness is a heuristic, not a vendor ATS score.</li>
-                <li>The system cannot verify truthfulness, proficiency, or work experience.</li>
-                <li>Scanned PDFs without a text layer may not be readable.</li>
-              </ul>
-            </div>
-            """,
+# ---------------- THEME ----------------
+if "ui_theme" not in st.session_state:
+    st.session_state.ui_theme = "Light"
+
+theme = st.session_state.ui_theme
+if theme == "Dark":
+    BG = "#071A12"
+    PANEL = "#0E261A"
+    PANEL_2 = "#163B27"
+    TEXT = "#E9F8EE"
+    MUTED = "#A8CBB4"
+    BORDER = "#28543A"
+    INPUT = "#0B2116"
+    ACCENT = "#86E3A4"
+else:
+    BG = "#F2FAF4"
+    PANEL = "#FFFFFF"
+    PANEL_2 = "#DFF4E5"
+    TEXT = "#173A27"
+    MUTED = "#557461"
+    BORDER = "#C7E5D0"
+    INPUT = "#FFFFFF"
+    ACCENT = "#187344"
+
+st.markdown(
+    f"""
+    <style>
+    :root {{
+      --sm-bg: {BG}; --sm-panel: {PANEL}; --sm-panel2: {PANEL_2};
+      --sm-text: {TEXT}; --sm-muted: {MUTED}; --sm-border: {BORDER};
+      --sm-accent: {ACCENT}; --sm-input: {INPUT};
+    }}
+    .stApp {{
+      background: radial-gradient(circle at 5% 0%, {PANEL_2} 0%, {BG} 45%);
+      color: var(--sm-text);
+    }}
+    [data-testid="stHeader"] {{ background: transparent; }}
+    .block-container {{ max-width: 1400px; padding-top: 1.5rem; padding-bottom: 3rem; }}
+    h1, h2, h3, h4, p, label, .stMarkdown, [data-testid="stCaptionContainer"] {{
+      color: var(--sm-text);
+    }}
+    .hero {{
+      background: linear-gradient(115deg, #0B4228 0%, #16834A 52%, #63C982 100%);
+      border-radius: 24px; padding: 30px 34px; margin-bottom: 20px;
+      box-shadow: 0 16px 45px rgba(18, 112, 62, .20);
+    }}
+    .hero h1 {{ color: #FFFFFF !important; font-size: 2.35rem; margin: 0 0 8px 0; }}
+    .hero p {{ color: #F0EDFF !important; margin: 0; font-size: 1.02rem; }}
+    .eyebrow {{ color: #DDFBE5 !important; text-transform: uppercase; letter-spacing: .12em;
+      font-size: .75rem; font-weight: 800; margin-bottom: 10px; }}
+    .panel {{
+      background: var(--sm-panel); border: 1px solid var(--sm-border);
+      border-radius: 18px; padding: 20px 22px; margin: 8px 0 16px 0;
+      box-shadow: 0 7px 22px rgba(15, 25, 60, .05);
+    }}
+    .metric {{
+      background: var(--sm-panel); border: 1px solid var(--sm-border);
+      border-radius: 17px; padding: 18px; min-height: 128px;
+    }}
+    .metric-label {{ color: var(--sm-muted) !important; font-size: .85rem; font-weight: 650; }}
+    .metric-value {{ color: var(--sm-accent) !important; font-size: 2rem; font-weight: 850; margin-top: 6px; }}
+    .metric-foot {{ color: var(--sm-muted) !important; font-size: .77rem; margin-top: 4px; }}
+    .pill {{ display:inline-block; padding:5px 10px; border-radius:99px; margin:3px 4px 3px 0;
+      background: var(--sm-panel2); color: var(--sm-text); border:1px solid var(--sm-border);
+      font-size:.83rem; }}
+    .good {{ color:#16A36A !important; font-weight:700; }}
+    .warn {{ color:#D99018 !important; font-weight:700; }}
+    .bad {{ color:#E45C73 !important; font-weight:700; }}
+    .muted {{ color: var(--sm-muted) !important; }}
+    .stButton > button {{ border-radius: 11px; font-weight: 700; min-height: 42px; }}
+    .stButton > button[kind="primary"] {{
+      background: linear-gradient(100deg, #176B3D, #36A85D); color: white; border: 0;
+    }}
 
