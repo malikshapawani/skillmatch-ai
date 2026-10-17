@@ -79,5 +79,4 @@ The tested workflows included CV upload, analysis, visual insights, recommendati
 **Maliksha Pawani**
 
 Software Engineering Student | UI/UX Design | Python | AI-Powered Applications
----
 *SkillMatch AI is a portfolio project focused on CV analysis, skill-gap identification, and AI-assisted career development.*
