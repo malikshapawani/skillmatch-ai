@@ -1,6 +1,3 @@
-
-    
-  
 import html
 import json
 import re
@@ -97,4 +94,838 @@ st.markdown(
     .stButton > button[kind="primary"] {{
       background: linear-gradient(100deg, #176B3D, #36A85D); color: white; border: 0;
     }}
+    [data-testid="stSidebar"] {{ background: var(--sm-panel); border-right: 1px solid var(--sm-border); }}
+    [data-testid="stSidebar"] * {{ color: var(--sm-text); }}
+    [data-testid="stFileUploader"], [data-testid="stTextArea"] {{
+      background: var(--sm-panel); border-radius: 14px;
+    }}
+    textarea, input {{ color: var(--sm-text) !important; background: var(--sm-input, {INPUT}) !important; }}
+    [data-testid="stMetric"] {{ background: var(--sm-panel); border:1px solid var(--sm-border);
+      padding: 14px; border-radius: 14px; }}
+    [data-testid="stDataFrame"] {{ border: 1px solid var(--sm-border); border-radius: 12px; }}
 
+    /* Brand and balanced dashboard layout */
+    .block-container {{ max-width: 1520px; padding-top: 1.15rem; padding-bottom: 3rem; }}
+    .brand-lockup {{ display:flex; align-items:center; gap:10px; margin:3px 0 8px 0; }}
+    .brand-mark {{
+      display:flex; align-items:center; justify-content:center; width:38px; height:38px;
+      border-radius:12px; color:#071A12 !important; font-size:1.45rem; font-weight:900;
+      background:linear-gradient(135deg,#7CFFB2,#20D879);
+      box-shadow:0 0 18px rgba(32,216,121,.28);
+    }}
+    .brand-lockup strong {{ display:block; color:var(--sm-text) !important; font-size:1.08rem; }}
+    .brand-lockup small {{ display:block; color:var(--sm-muted) !important; font-size:.62rem; letter-spacing:.09em; margin-top:2px; }}
+    .hero {{
+      position:relative; overflow:hidden;
+      background:linear-gradient(115deg,#073B27 0%,#087F4F 48%,#27C879 100%);
+      border:1px solid rgba(125,255,178,.25);
+      box-shadow:0 16px 42px rgba(18,112,62,.20), inset 0 1px 0 rgba(255,255,255,.12);
+    }}
+    .hero:after {{
+      content:""; position:absolute; width:240px; height:240px; right:-65px; top:-115px;
+      border-radius:50%; background:rgba(170,255,205,.13); filter:blur(2px);
+    }}
+    .panel {{ box-shadow:0 8px 24px rgba(10,70,38,.07); }}
+    .panel h3 {{ font-size:1.08rem; margin-top:0; }}
+    [data-testid="stSidebar"] {{ box-shadow:8px 0 28px rgba(0,0,0,.04); }}
+    [data-testid="stSidebar"] [data-testid="stRadio"] > label {{
+      color:var(--sm-muted) !important; font-size:.72rem; font-weight:800; letter-spacing:.1em;
+    }}
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] {{ gap:5px; }}
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label {{
+      border:1px solid transparent; border-radius:11px; padding:8px 10px; transition:all .18s ease;
+    }}
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:hover {{
+      background:var(--sm-panel2); border-color:var(--sm-border);
+    }}
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) {{
+      background:var(--sm-panel2); border-color:#2AC879;
+      box-shadow:inset 3px 0 0 #2AC879, 0 0 15px rgba(42,200,121,.08);
+    }}
+
+    /* Luminous green buttons */
+    .stButton > button, [data-testid="stDownloadButton"] button {{
+      border:1px solid rgba(42,200,121,.65) !important;
+      border-radius:12px !important; font-weight:750 !important; min-height:44px;
+      transition:all .2s ease-in-out;
+    }}
+    .stButton > button[kind="primary"], [data-testid="stDownloadButton"] button {{
+      background:linear-gradient(115deg,#087F4F,#19B96C) !important;
+      color:#FFFFFF !important; box-shadow:0 5px 16px rgba(25,185,108,.18);
+    }}
+    .stButton > button:hover, [data-testid="stDownloadButton"] button:hover {{
+      border-color:#7CFFB2 !important; transform:translateY(-2px);
+      box-shadow:0 8px 22px rgba(32,216,121,.26);
+    }}
+
+    /* Clear text in disabled CV preview in both themes */
+    [data-testid="stTextArea"] textarea:disabled {{
+      color: var(--sm-text) !important;
+      -webkit-text-fill-color: var(--sm-text) !important;
+      opacity: 1 !important;
+      background: var(--sm-input) !important;
+      border: 1px solid var(--sm-border) !important;
+    }}
+
+    /* Buttons */
+    .stButton > button, [data-testid="stDownloadButton"] button {{
+      border-radius: 12px !important;
+      font-weight: 700 !important;
+      min-height: 44px;
+      transition: all .2s ease-in-out;
+    }}
+    .stButton > button:hover, [data-testid="stDownloadButton"] button:hover {{
+      border-color: #39B77A !important;
+      transform: translateY(-2px);
+      box-shadow: 0 7px 18px rgba(16, 130, 82, .20);
+    }}
+
+    /* Cards */
+    .panel {{
+      transition: transform .2s ease, box-shadow .2s ease;
+    }}
+    .panel:hover {{
+      transform: translateY(-3px);
+      border-color: #39B77A !important;
+      box-shadow: 0 10px 25px rgba(32, 184, 120, .16);
+    }}
+    [data-testid="stVerticalBlockBorderWrapper"] {{
+      border: 1px solid var(--sm-border) !important;
+      border-radius: 16px !important;
+      box-shadow: 0 5px 16px rgba(0, 0, 0, .06);
+    }}
+
+    /* Action plan priority cards */
+    .priority-card {{
+      background: var(--sm-panel);
+      color: var(--sm-text);
+      border: 1px solid var(--sm-border);
+      border-left: 5px solid var(--sm-accent);
+      border-radius: 16px;
+      padding: 20px 22px;
+      margin: 12px 0;
+      box-shadow: 0 5px 18px rgba(0, 0, 0, .06);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }}
+    .priority-card:hover {{
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(32, 184, 120, .14);
+    }}
+    .priority-card h4 {{
+      color: var(--sm-text) !important;
+      margin: 14px 0 8px 0;
+      font-size: 1.08rem;
+    }}
+    .priority-card p {{
+      color: var(--sm-muted) !important;
+      line-height: 1.7;
+      margin-bottom: 2px;
+    }}
+    .priority-top {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }}
+    .priority-badge {{
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }}
+    .priority-badge.high {{ background: #FCE7E7; color: #A51D2D !important; }}
+    .priority-badge.medium {{ background: #FFF1CC; color: #805600 !important; }}
+    .priority-badge.low {{ background: #DDF7E8; color: #176B3D !important; }}
+    .priority-card.high {{ border-left-color: #E34F5F; }}
+    .priority-card.medium {{ border-left-color: #E6A526; }}
+    .priority-card.low {{ border-left-color: #2CA66F; }}
+    .priority-step {{ color: var(--sm-muted); font-size: .75rem; font-weight: 700; }}
+
+    /* Alerts and form controls */
+    [data-testid="stAlert"] {{
+      border: 1px solid var(--sm-border) !important;
+      border-radius: 14px !important;
+    }}
+    [data-testid="stTextInput"] input, [data-testid="stTextArea"] textarea {{
+      border: 1px solid var(--sm-border) !important;
+      border-radius: 10px !important;
+    }}
+    [data-testid="stTextInput"] input:focus, [data-testid="stTextArea"] textarea:focus {{
+      border-color: #20B878 !important;
+      box-shadow: 0 0 0 3px rgba(32, 184, 120, .18) !important;
+    }}
+    [data-baseweb="select"] > div {{
+      border-radius: 10px !important;
+      border-color: var(--sm-border) !important;
+    }}
+    [data-baseweb="select"] > div:focus-within {{
+      border-color:#20B878 !important;
+      box-shadow:0 0 0 2px rgba(32,184,120,.18) !important;
+    }}
+    [data-baseweb="popover"], [data-baseweb="menu"] {{
+      background:var(--sm-panel) !important; border:1px solid var(--sm-border) !important;
+      border-radius:12px !important; box-shadow:0 12px 30px rgba(0,0,0,.18) !important;
+    }}
+    [role="option"] {{ color:var(--sm-text) !important; }}
+    [role="option"]:hover {{ background:var(--sm-panel2) !important; }}
+    [data-testid="stMetric"] {{
+      border:1px solid var(--sm-border) !important; border-radius:16px !important;
+      box-shadow:0 7px 22px rgba(32,184,120,.07);
+    }}
+    [data-testid="stTabs"] button[aria-selected="true"] {{
+      border-bottom:2px solid #2AC879 !important; color:var(--sm-text) !important;
+    }}
+    .priority-badge.high {{ box-shadow:0 0 12px rgba(229,79,95,.12); }}
+    .priority-badge.medium {{ box-shadow:0 0 12px rgba(230,165,38,.12); }}
+    .priority-badge.low {{ box-shadow:0 0 12px rgba(44,166,111,.12); }}
+    /* Larger, cleaner typography */
+    html, body, [data-testid="stAppViewContainer"] {{ font-size: 16px; }}
+    .stMarkdown, .stText {{ font-size: 1rem; line-height: 1.65; }}
+    h1 {{ font-size: 2.45rem !important; }}
+    h2 {{ font-size: 1.9rem !important; }}
+    h3 {{ font-size: 1.35rem !important; }}
+    h4 {{ font-size: 1.12rem !important; }}
+    [data-testid="stCaptionContainer"] p {{ font-size: .9rem !important; }}
+
+    /* Highlighted insight metric cards */
+    [data-testid="stMetric"] {{
+      background: linear-gradient(145deg, var(--sm-panel), var(--sm-panel2)) !important;
+      border: 1px solid #25B86B !important; border-radius: 16px !important;
+      padding: 17px 18px !important; box-shadow: 0 6px 18px rgba(20,150,80,.10);
+    }}
+    [data-testid="stMetricLabel"] p {{ color: var(--sm-muted) !important; font-size: .9rem !important; font-weight: 700 !important; }}
+    [data-testid="stMetricValue"] {{ color: var(--sm-accent) !important; font-size: 1.9rem !important; font-weight: 850 !important; }}
+
+    /* Distinct tab controls */
+    [data-testid="stTabs"] [role="tablist"] {{ gap: 10px; border-bottom: 1px solid var(--sm-border); padding: 8px; background: var(--sm-panel2); border-radius: 14px 14px 0 0; }}
+    [data-testid="stTabs"] button[role="tab"] {{ background: var(--sm-panel) !important; border: 1px solid var(--sm-border) !important; border-radius: 10px !important; padding: 10px 16px !important; color: var(--sm-text) !important; font-weight: 750 !important; }}
+    [data-testid="stTabs"] button[role="tab"][aria-selected="true"] {{ background: linear-gradient(120deg,#087F4F,#22C879) !important; border-color: #22C879 !important; color: #FFFFFF !important; box-shadow: 0 4px 14px rgba(34,200,121,.2); }}
+    [data-testid="stTabs"] [data-baseweb="tab-panel"] {{ padding: 18px 6px 8px 6px; }}
+
+    /* Reusable content cards */
+    .feature-card, .about-card, .export-card {{ background: var(--sm-panel); border: 1px solid var(--sm-border); border-radius: 18px; padding: 22px 24px; margin: 10px 0 16px 0; box-shadow: 0 8px 24px rgba(10,70,38,.07); }}
+    .feature-card {{ border-top: 4px solid #24C879; background: linear-gradient(145deg,var(--sm-panel),var(--sm-panel2)); }}
+    .feature-card h3, .about-card h3, .export-card h3 {{ color: var(--sm-text) !important; font-size: 1.22rem; margin: 0 0 12px 0; }}
+    .feature-card ul, .about-card ul {{ padding-left: 22px; margin-bottom: 0; }}
+    .feature-card li, .about-card li {{ color: var(--sm-text); margin: 8px 0; line-height: 1.6; }}
+    .about-card.components {{ border-top: 4px solid #20B878; }}
+    .about-card.limitations {{ border-top: 4px solid #E5A83B; }}
+    .export-card {{ border-top: 4px solid #20B878; }}
+    .export-card p {{ color: var(--sm-muted) !important; }}
+    .export-icon {{ display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 12px; background: var(--sm-panel2); border: 1px solid var(--sm-border); font-size: 1.35rem; margin-bottom: 10px; }}
+    .section-intro {{ color: var(--sm-muted) !important; font-size: 1rem; line-height: 1.7; margin-bottom: 18px; }}
+    [data-testid="stDataFrame"] {{ border: 1px solid var(--sm-border) !important; border-radius: 14px !important; overflow: hidden; }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# ---------------- HELPERS ----------------
+SECTION_PATTERNS = {
+    "Contact details": [r"\bemail\b", r"\bphone\b", r"\bcontact\b", r"@[\w.-]+\.\w+"],
+    "Professional summary": [r"\bsummary\b", r"\bprofile\b", r"\bobjective\b", r"\babout me\b"],
+    "Work experience": [r"\bexperience\b", r"\bemployment\b", r"\bwork history\b", r"\binternship\b"],
+    "Education": [r"\beducation\b", r"\bdegree\b", r"\bqualification\b", r"\buniversity\b"],
+    "Projects": [r"\bprojects?\b", r"\bportfolio\b", r"\bcase studies\b"],
+    "Skills": [r"\btechnical skills\b", r"\bskills\b", r"\btechnologies\b", r"\bcompetencies\b"],
+    "Certifications": [r"\bcertifications?\b", r"\blicenses?\b", r"\bcredentials?\b"],
+}
+
+ACTION_VERBS = [
+    "built", "developed", "designed", "implemented", "automated", "optimized",
+    "created", "delivered", "improved", "analyzed", "tested", "deployed",
+    "integrated", "managed", "led", "reduced", "increased", "maintained",
+]
+
+def flatten_skills(skill_dict):
+    return sorted({str(skill) for values in skill_dict.values() for skill in values}, key=str.lower)
+
+def detect_sections(cv_text):
+    text = cv_text.lower()
+    found = {}
+    for section, patterns in SECTION_PATTERNS.items():
+        found[section] = any(re.search(pattern, text) for pattern in patterns)
+    return found
+
+def ats_score(cv_text, sections):
+    words = re.findall(r"\b[\w+#.-]+\b", cv_text)
+    word_count = len(words)
+    bullets = len(re.findall(r"(?m)^\s*(?:[-•*▪]|\d+[.)])\s+", cv_text))
+    quantified = len(re.findall(r"\b\d+(?:\.\d+)?\s?(?:%|x|k|m|years?|months?|users?|clients?|projects?)?\b", cv_text.lower()))
+    action_count = sum(len(re.findall(rf"\b{re.escape(v)}\b", cv_text.lower())) for v in ACTION_VERBS)
+    section_count = sum(sections.values())
+    score = 0
+    score += min(section_count / len(SECTION_PATTERNS), 1) * 35
+    score += min(word_count / 450, 1) * 15
+    score += min(bullets / 8, 1) * 15
+    score += min(quantified / 5, 1) * 15
+    score += min(action_count / 6, 1) * 20
+    return round(score), {
+        "Word count": word_count,
+        "Bullet points detected": bullets,
+        "Quantified results detected": quantified,
+        "Action verbs detected": action_count,
+        "Sections detected": section_count,
+    }
+
+def prioritize_skills(job_text, job_skills, cv_skills):
+    lower = job_text.lower()
+    cv_set = set(cv_skills)
+    rows = []
+    for skill in job_skills:
+        escaped = re.escape(skill.lower())
+        positions = [m.start() for m in re.finditer(escaped, lower)]
+        context = " ".join(lower[max(0, p - 70):p + len(skill) + 70] for p in positions)
+        if any(word in context for word in ["required", "must have", "mandatory", "essential", "need to have"]):
+            priority = "High"
+            weight = 3
+        elif any(word in context for word in ["preferred", "bonus", "nice to have", "plus", "desirable"]):
+            priority = "Low"
+            weight = 1
+        else:
+            priority = "Medium"
+            weight = 2
+        rows.append({
+            "Skill": skill,
+            "Priority": priority,
+            "Status": "Matched" if skill in cv_set else "Missing",
+            "Weight": weight,
+        })
+    return rows
+
+def build_recommendations(result):
+    recs = []
+    missing = result["missing"]
+    sections = result["sections"]
+    if not sections.get("Professional summary", False):
+        recs.append(("High", "Add a short professional summary", "Write 2–3 lines tailored to the target role and include your strongest relevant skills."))
+    if not sections.get("Projects", False):
+        recs.append(("High", "Add a Projects section", "Include 2–3 relevant projects, your role, tools used, and the outcome."))
+    if not sections.get("Education", False):
+        recs.append(("Medium", "Make Education easy to find", "Add your degree, institution, graduation year, and relevant coursework if useful."))
+    if not sections.get("Certifications", False):
+        recs.append(("Low", "Add relevant certifications if you have them", "Only list genuine certificates that support the target role."))
+    if result["ats_score"] < 70:
+        recs.append(("High", "Improve ATS readability", "Use standard section headings, simple formatting, and concise bullet points. Avoid relying on graphics to convey essential details."))
+    if result["quantified"] < 2:
+        recs.append(("Medium", "Show measurable outcomes", "Where accurate, add numbers such as time saved, users supported, test coverage, or project scope. Do not invent metrics."))
+    for skill in missing[:5]:
+        recs.append(("High" if skill in result["high_priority_missing"] else "Medium",
+                     f"Address the skill gap: {skill}",
+                     f"If you genuinely have this experience, make it easier to find in your CV. Otherwise, plan a small project or course to build evidence for {skill}."))
+    if not recs:
+        recs.append(("Low", "Keep tailoring your CV", "Your basic structure looks complete. Continue aligning examples and project evidence with each vacancy."))
+    return recs
+
+def make_text_report(result):
+    lines = [
+        "SKILLMATCH AI — CAREER ANALYSIS REPORT",
+        f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+        f"CV: {result['filename']}",
+        "",
+        f"Text similarity: {result['similarity']:.1f}%",
+        f"Skill coverage: {result['coverage']:.1f}%",
+        f"ATS-readiness estimate: {result['ats_score']}/100",
+        f"Matched skills: {len(result['matched'])}",
+        f"Missing skills: {len(result['missing'])}",
+        "",
+        "MATCHED SKILLS",
+        *([f"- {s}" for s in result["matched"]] or ["- None detected"]),
+        "",
+        "MISSING SKILLS",
+        *([f"- {s}" for s in result["missing"]] or ["- None detected"]),
+        "",
+        "SECTION CHECK",
+        *[f"- {name}: {'Found' if found else 'Not detected'}" for name, found in result["sections"].items()],
+        "",
+        "RECOMMENDATIONS",
+        *[f"- [{priority}] {title}: {detail}" for priority, title, detail in result["recommendations"]],
+        "",
+        "Note: These are heuristic analysis indicators, not a hiring decision or a guarantee of ATS performance.",
+    ]
+    return "\n".join(lines)
+
+def html_report(result):
+    rows = "".join(
+        f"<tr><td>{html.escape(r['Skill'])}</td><td>{r['Priority']}</td><td>{r['Status']}</td></tr>"
+        for r in result["priority_rows"]
+    )
+    recs = "".join(
+        f"<li><b>[{html.escape(p)}] {html.escape(t)}</b><br>{html.escape(d)}</li>"
+        for p, t, d in result["recommendations"]
+    )
+    matched = ", ".join(result["matched"]) or "None detected"
+    missing = ", ".join(result["missing"]) or "None detected"
+    return f"""<!doctype html><html><head><meta charset="utf-8"><title>SkillMatch AI report</title>
+    <style>body{{font:16px Arial;max-width:900px;margin:40px auto;padding:0 20px;color:#20243a}}
+    h1{{color:#176B3D}}.cards{{display:flex;gap:12px;flex-wrap:wrap}}.card{{padding:18px;border:1px solid #C7E5D0;border-radius:12px;min-width:170px}}
+    table{{border-collapse:collapse;width:100%}}td,th{{border:1px solid #ddd;padding:9px;text-align:left}}th{{background:#DFF4E5}}
+    .note{{color:#666;font-size:13px}}</style></head><body>
+    <h1>🎯 SkillMatch AI</h1><h2>Career Analysis Report</h2>
+    <p><b>CV:</b> {html.escape(result['filename'])} &nbsp; <b>Generated:</b> {datetime.now().strftime('%Y-%m-%d %H:%M')}</p>
+    <div class="cards"><div class="card"><b>Text similarity</b><h2>{result['similarity']:.1f}%</h2></div>
+    <div class="card"><b>Skill coverage</b><h2>{result['coverage']:.1f}%</h2></div>
+    <div class="card"><b>ATS-readiness estimate</b><h2>{result['ats_score']}/100</h2></div></div>
+    <h2>Matched skills</h2><p>{html.escape(matched)}</p><h2>Missing skills</h2><p>{html.escape(missing)}</p>
+    <h2>Skill-by-skill analysis</h2><table><tr><th>Skill</th><th>Priority</th><th>Status</th></tr>{rows}</table>
+    <h2>Recommendations</h2><ol>{recs}</ol>
+    <p class="note">These are heuristic indicators, not a hiring decision or a guarantee of ATS performance. Only claim skills and results you can honestly demonstrate.</p>
+    </body></html>"""
+
+def chart_layout(fig):
+    fig.update_layout(
+        paper_bgcolor=PANEL, plot_bgcolor=PANEL, font_color=TEXT,
+        colorway=["#18A85B", "#35D07F", "#7CE7A5", "#0B7542", "#B4F3CA"],
+        margin=dict(l=10, r=10, t=35, b=10), legend_title_text="",
+    )
+    fig.update_xaxes(gridcolor=BORDER, zerolinecolor=BORDER, tickfont_color=TEXT, title_font_color=TEXT)
+    fig.update_yaxes(gridcolor=BORDER, zerolinecolor=BORDER, tickfont_color=TEXT, title_font_color=TEXT)
+    return fig
+
+# ---------------- SIDEBAR ----------------
+with st.sidebar:
+    st.markdown(
+        '<div class="brand-lockup"><span class="brand-mark">✦</span>'
+        '<span><strong>SkillMatch AI</strong><small>CAREER INTELLIGENCE</small></span></div>',
+        unsafe_allow_html=True,
+    )
+    st.caption("YOUR CAREER WORKSPACE")
+
+    page = st.radio(
+        "WORKSPACE",
+        [
+            "🏠 Overview",
+            "🔎 Analyze CV",
+            "📊 Insights",
+            "🧭 Action plan",
+            "✨ AI CV Improvement",
+            "📄 Export report",
+            "ℹ️ About",
+        ],
+        label_visibility="visible",
+    )
+
+    st.divider()
+    st.markdown("#### Appearance")
+    st.selectbox(
+        "Choose theme",
+        ["Light", "Dark"],
+        key="ui_theme",
+        label_visibility="collapsed",
+    )
+
+    st.divider()
+    st.markdown("#### Analysis workflow")
+    st.caption("1. Upload CV PDF\\n\\n2. Paste the target job\\n\\n3. Analyze gaps\\n\\n4. Export your report")
+    if st.button("↻ Reset current analysis", use_container_width=True):
+        st.session_state.analysis = None
+        st.session_state.pop("ai_cv_suggestions", None)
+        st.rerun()
+    st.caption("Privacy: uploaded CV text is processed for this session. Review the AI provider's terms before sending CV content to Gemini.")
+
+# ---------------- HERO ----------------
+st.markdown(
+    """
+    <div class="hero">
+      <div class="eyebrow">CAREER INTELLIGENCE • CV OPTIMIZATION</div>
+      <h1>SkillMatch AI</h1>
+      <p>Understand your fit, discover skill gaps, and turn your resume into a stronger application.</p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+result = st.session_state.get("analysis")
+
+if page == "🏠 Overview":
+    st.subheader("Your career workspace")
+    st.write("A structured review of your CV against a target vacancy — with evidence, gaps, and practical next steps.")
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.markdown('<div class="panel"><h3>🎯 Match intelligence</h3><p class="muted">Compare text similarity with detected skill coverage instead of relying on one number.</p></div>', unsafe_allow_html=True)
+    with c2:
+        st.markdown('<div class="panel"><h3>🧩 Gap prioritization</h3><p class="muted">Separate high-priority requirements from preferred skills and see what to address first.</p></div>', unsafe_allow_html=True)
+    with c3:
+        st.markdown('<div class="panel"><h3>🚀 Improvement plan</h3><p class="muted">Get section checks, evidence-based suggestions, and an exportable report.</p></div>', unsafe_allow_html=True)
+    if result:
+        st.success(f"Latest analysis available for **{result['filename']}**.")
+        st.markdown('<div class="section-intro">A clear summary of your CV match, skill coverage, and structure signals.</div>', unsafe_allow_html=True)
+        with st.container(border=True):
+            a, b, c, d = st.columns(4, gap="medium")
+            a.metric("Text similarity", f"{result['similarity']:.1f}%")
+            b.metric("Skill coverage", f"{result['coverage']:.1f}%")
+            c.metric("ATS readiness", f"{result['ats_score']}/100")
+            d.metric("Skills matched", f"{len(result['matched'])}/{len(result['job_skills'])}")
+        st.caption("Similarity and coverage measure different things. ATS readiness is a transparent heuristic, not a guarantee of passing an applicant tracking system.")
+        st.markdown("### Explore your analysis")
+        tabs = st.tabs(["🧩 Skill gaps", "📄 CV structure", "🌿 Skill categories", "👁️ CV text preview"])
+        with tabs[0]:
+            if result["priority_rows"]:
+                df = pd.DataFrame(result["priority_rows"])[["Skill", "Priority", "Status"]]
+                st.dataframe(df, use_container_width=True, hide_index=True)
+                if result["job_skills"]:
+                    matched_n = len(result["matched"])
+                    missing_n = len(result["missing"])
+                    fig = go.Figure(data=[
+                        go.Bar(name="Matched", x=["Job skills"], y=[matched_n], marker_color="#18A85B"),
+                        go.Bar(name="Missing", x=["Job skills"], y=[missing_n], marker_color="#A7EFC2"),
+                    ])
+                    fig.update_layout(barmode="stack", title="Detected job skills: matched vs missing", yaxis_title="Number of skills")
+                    st.plotly_chart(chart_layout(fig), use_container_width=True)
+            else:
+                st.info("No skills from the current skill dictionary were detected in the job description. You can extend data/skills.json.")
+        with tabs[1]:
+            section_df = pd.DataFrame([
+                {"CV section": name, "Status": "Detected" if found else "Not detected", "Present": int(found)}
+                for name, found in result["sections"].items()
+            ])
+            st.dataframe(section_df[["CV section", "Status"]], use_container_width=True, hide_index=True)
+            fig = px.bar(
+                section_df, x="CV section", y="Present", range_y=[0, 1.15],
+                title="CV section completeness", text="Status",
+                color_discrete_sequence=["#18A85B"],
+            )
+            st.plotly_chart(chart_layout(fig), use_container_width=True)
+            st.caption(f"Text signals: {result['word_count']} words • {result['bullets']} bullets • {result['action_verbs']} action-verb mentions • {result['quantified']} numeric evidence signals.")
+        with tabs[2]:
+            categories = []
+            for category, skills in result["job_skill_map"].items():
+                total = len(skills)
+                found = sum(1 for s in skills if s in result["matched"])
+                categories.append({"Category": category, "Matched": found, "Missing": total - found, "Coverage %": round(found / total * 100, 1) if total else 0})
+            if categories:
+                cat_df = pd.DataFrame(categories)
+                st.dataframe(cat_df, use_container_width=True, hide_index=True)
+                fig = px.bar(
+                    cat_df, x="Category", y=["Matched", "Missing"], barmode="group",
+                    title="Coverage by skill category",
+                    color_discrete_sequence=["#18A85B", "#A7EFC2"],
+                )
+                st.plotly_chart(chart_layout(fig), use_container_width=True)
+            else:
+                st.info("No categorized skills were detected.")
+        with tabs[3]:
+            st.text_area("Extracted CV text (read-only preview)", result["cv_text"], height=300, disabled=True)
+
+elif page == "🔎 Analyze CV":
+    st.subheader("Analyze a resume against a vacancy")
+    st.caption("Use a text-based PDF. Scanned image PDFs may need OCR before analysis.")
+    left, right = st.columns([0.9, 1.1], gap="large")
+    with left:
+        uploaded_file = st.file_uploader("Upload your CV (PDF)", type=["pdf"], help="Your file is processed for this session.")
+        if uploaded_file:
+            st.success(f"Ready: {uploaded_file.name}")
+        st.markdown("#### Job description")
+        sample_job = (
+            "Software Engineer\n\n"
+            "Required: Python, SQL, Git, REST API, unit testing, problem solving.\n"
+            "Responsibilities: Develop and maintain web applications, design APIs, "
+            "write automated tests, collaborate with a team, review code, and document solutions.\n"
+            "Preferred: Docker, AWS, CI/CD, React, machine learning."
+        )
+        if st.button("Load a realistic sample job", use_container_width=True):
+            st.session_state.job_description = sample_job
+        job_description = st.text_area(
+            "Paste the complete job description",
+            key="job_description",
+            height=260,
+            placeholder="Include responsibilities, required qualifications, preferred skills, and experience...",
+        )
+        analyze = st.button("✨ Run full analysis", type="primary", use_container_width=True)
+    with right:
+        st.markdown("#### What you'll receive")
+        st.markdown(
+            "- Overall match indicators and a transparent ATS-readiness estimate\n"
+            "- Required / preferred skill gap table\n"
+            "- CV section completeness check\n"
+            "- Category-level skill coverage visualization\n"
+            "- Specific suggestions to improve the CV\n"
+            "- Downloadable HTML report and plain-text summary"
+        )
+        st.warning("The analyzer identifies terms and structural signals. It cannot verify whether a skill is genuinely mastered, and it does not predict hiring outcomes.")
+        st.markdown("#### Privacy reminder")
+        st.caption("Avoid uploading another person's CV without permission. Remove sensitive information if it is not needed for analysis.")
+
+    if analyze:
+        if uploaded_file is None:
+            st.warning("Please upload a PDF CV first.")
+        elif not job_description.strip():
+            st.warning("Please enter a job description.")
+        else:
+            with st.spinner("Reading CV and building your analysis..."):
+                cv_text, error = extract_text_from_pdf(uploaded_file)
+                if error:
+                    st.error(error)
+                else:
+                    cv_skill_map = find_skills(cv_text)
+                    job_skill_map = find_skills(job_description)
+                    cv_skills = flatten_skills(cv_skill_map)
+                    job_skills = flatten_skills(job_skill_map)
+                    cv_set = set(cv_skills)
+                    job_set = set(job_skills)
+                    matched = sorted(cv_set & job_set, key=str.lower)
+                    missing = sorted(job_set - cv_set, key=str.lower)
+                    coverage = (len(matched) / len(job_set) * 100) if job_set else 0.0
+                    similarity = calculate_similarity(cv_text, job_description)
+                    sections = detect_sections(cv_text)
+                    ats, metrics = ats_score(cv_text, sections)
+                    priority_rows = prioritize_skills(job_description, job_skills, cv_skills)
+                    high_priority_missing = [r["Skill"] for r in priority_rows if r["Status"] == "Missing" and r["Priority"] == "High"]
+                    analysis = {
+                        "filename": uploaded_file.name,
+                        "cv_text": cv_text,
+                        "job_description": job_description,
+                        "cv_skill_map": cv_skill_map,
+                        "job_skill_map": job_skill_map,
+                        "cv_skills": cv_skills,
+                        "job_skills": job_skills,
+                        "matched": matched,
+                        "missing": missing,
+                        "coverage": coverage,
+                        "similarity": similarity,
+                        "sections": sections,
+                        "ats_score": ats,
+                        "word_count": metrics["Word count"],
+                        "bullets": metrics["Bullet points detected"],
+                        "quantified": metrics["Quantified results detected"],
+                        "action_verbs": metrics["Action verbs detected"],
+                        "priority_rows": priority_rows,
+                        "high_priority_missing": high_priority_missing,
+                    }
+                    analysis["recommendations"] = build_recommendations(analysis)
+                    st.session_state.analysis = analysis
+                    st.success("Analysis complete. Open Insights, Action plan, and Export report from the sidebar.")
+                    st.rerun()
+
+elif page == "📊 Insights":
+    if not result:
+        st.info("Run an analysis first from **Analyze CV**.")
+    else:
+        st.subheader("Analysis insights")
+        st.caption(f"Report for: {result['filename']}")
+        a, b, c, d = st.columns(4)
+        a.metric("Text similarity", f"{result['similarity']:.1f}%")
+        b.metric("Skill coverage", f"{result['coverage']:.1f}%")
+        c.metric("ATS readiness", f"{result['ats_score']}/100")
+        d.metric("Skills matched", f"{len(result['matched'])}/{len(result['job_skills'])}")
+        st.caption("Similarity and coverage measure different things. ATS readiness is a transparent heuristic, not a guarantee of passing an applicant tracking system.")
+        tabs = st.tabs(["Skill gaps", "CV structure", "Skill categories", "CV text preview"])
+        with tabs[0]:
+            if result["priority_rows"]:
+                df = pd.DataFrame(result["priority_rows"])[["Skill", "Priority", "Status"]]
+                st.dataframe(df, use_container_width=True, hide_index=True)
+                if result["job_skills"]:
+                    matched_n = len(result["matched"])
+                    missing_n = len(result["missing"])
+                    fig = go.Figure(data=[
+                        go.Bar(name="Matched", x=["Job skills"], y=[matched_n], marker_color="#239B62"),
+                        go.Bar(name="Missing", x=["Job skills"], y=[missing_n], marker_color="#A8DDB5"),
+                    ])
+                    fig.update_layout(barmode="stack", title="Detected job skills: matched vs missing", yaxis_title="Number of skills")
+                    st.plotly_chart(chart_layout(fig), use_container_width=True)
+            else:
+                st.info("No skills from the current skill dictionary were detected in the job description. You can extend data/skills.json.")
+        with tabs[1]:
+            section_df = pd.DataFrame([
+                {"CV section": name, "Status": "Detected" if found else "Not detected", "Present": int(found)}
+                for name, found in result["sections"].items()
+            ])
+            st.dataframe(section_df[["CV section", "Status"]], use_container_width=True, hide_index=True)
+            fig = px.bar(section_df, x="CV section", y="Present", range_y=[0, 1.15], title="CV section completeness", text="Status")
+            st.plotly_chart(chart_layout(fig), use_container_width=True)
+            st.caption(f"Text signals: {result['word_count']} words • {result['bullets']} bullets • {result['action_verbs']} action-verb mentions • {result['quantified']} numeric evidence signals.")
+        with tabs[2]:
+            categories = []
+            for category, skills in result["job_skill_map"].items():
+                total = len(skills)
+                found = sum(1 for s in skills if s in result["matched"])
+                categories.append({"Category": category, "Matched": found, "Missing": total - found, "Coverage %": round(found / total * 100, 1) if total else 0})
+            if categories:
+                cat_df = pd.DataFrame(categories)
+                st.dataframe(cat_df, use_container_width=True, hide_index=True)
+                fig = px.bar(cat_df, x="Category", y=["Matched", "Missing"], barmode="group", title="Coverage by skill category")
+                st.plotly_chart(chart_layout(fig), use_container_width=True)
+            else:
+                st.info("No categorized skills were detected.")
+        with tabs[3]:
+            st.text_area("Extracted CV text (read-only preview)", result["cv_text"], height=300, disabled=True)
+
+elif page == "🧭 Action plan":
+    if not result:
+        st.info("Run an analysis first from **Analyze CV**.")
+    else:
+        st.subheader("Your prioritized improvement plan")
+        st.write("Start with the highest-impact changes. Suggestions are based on detected text signals; verify each one against your actual experience.")
+        for i, (priority, title, detail) in enumerate(result["recommendations"], 1):
+            priority_class = str(priority).strip().lower()
+            if priority_class not in ("high", "medium", "low"):
+                priority_class = "medium"
+
+            st.markdown(
+                f"""
+                <div class="priority-card {priority_class}">
+                    <div class="priority-top">
+                        <span class="priority-badge {priority_class}">
+                            {html.escape(priority_class.upper())} PRIORITY
+                        </span>
+                        <span class="priority-step">STEP {i:02d}</span>
+                    </div>
+                    <h4>{html.escape(str(title))}</h4>
+                    <p>{html.escape(str(detail))}</p>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+        st.markdown("#### Suggested learning focus")
+        if result["missing"]:
+            st.write("Review these gaps first, especially those marked High in the Insights table:")
+            st.write(", ".join(result["missing"][:8]))
+            st.caption("A gap means the skill was not detected in the CV text. It does not prove you lack the skill.")
+        else:
+            st.success("No missing skills from the current skill dictionary were detected. Review whether the CV gives concrete evidence for each requirement.")
+
+elif page == "✨ AI CV Improvement":
+    st.subheader("✨ AI-powered CV Improvement")
+    st.write(
+        "Get personalized CV improvement suggestions "
+        "based on your uploaded CV and target job description."
+    )
+
+    if not result:
+        st.info(
+            "Please go to Analyze CV, upload your PDF, "
+            "enter a job description, and run the analysis first."
+        )
+    else:
+        st.success(f"CV ready: {result['filename']}")
+        st.caption(
+            "Your CV text and job description will be sent to "
+            "Google Gemini to generate improvement suggestions. "
+            "Use a CV with personal contact details removed when testing."
+        )
+
+        if st.button(
+            "✨ Improve My CV",
+            type="primary",
+            use_container_width=True,
+        ):
+            with st.spinner("Gemini is reviewing your CV..."):
+                suggestions = generate_cv_improvements(
+                    result["cv_text"],
+                    result["job_description"],
+                )
+            st.session_state["ai_cv_suggestions"] = suggestions
+
+        suggestions = st.session_state.get("ai_cv_suggestions")
+        if suggestions:
+            st.markdown("### Your AI improvement recommendations")
+            st.markdown(suggestions)
+            st.download_button(
+                "⬇️ Download AI recommendations",
+                data=suggestions,
+                file_name="skillmatch_ai_cv_improvements.txt",
+                mime="text/plain",
+                use_container_width=True,
+            )
+
+elif page == "📄 Export report":
+    if not result:
+        st.info("Run an analysis first from **Analyze CV**.")
+    else:
+        st.subheader("Export your analysis")
+        st.markdown(
+            '<div class="section-intro">Choose a format for your report. Review the contents before sharing, as reports may include details extracted from your CV.</div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            """
+            <div class="export-card">
+              <span class="export-icon">📊</span>
+              <h3>Detailed analysis report</h3>
+              <p>Review match indicators, skill tables, and recommendations in a browser.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        html_col, txt_col = st.columns(2, gap="large")
+        with html_col:
+            with st.container(border=True):
+                st.markdown("### 🌐 HTML report")
+                st.write("A styled report with metrics, skill tables, and recommendations.")
+                st.download_button(
+                    "⬇️ Download HTML report",
+                    data=html_report(result),
+                    file_name="skillmatch_ai_report.html",
+                    mime="text/html",
+                    type="primary",
+                    use_container_width=True,
+                )
+        with txt_col:
+            with st.container(border=True):
+                st.markdown("### 📝 Plain-text report")
+                st.write("A lightweight text summary for notes and records.")
+                st.download_button(
+                    "⬇️ Download TXT report",
+                    data=make_text_report(result),
+                    file_name="skillmatch_ai_report.txt",
+                    mime="text/plain",
+                    use_container_width=True,
+                )
+        if result["priority_rows"]:
+            csv_data = pd.DataFrame(result["priority_rows"])[["Skill", "Priority", "Status"]].to_csv(index=False).encode("utf-8")
+            with st.container(border=True):
+                st.markdown("### 🌿 Skill-gap data")
+                st.write("A CSV spreadsheet of detected skills, priorities, and match status.")
+                st.download_button(
+                    "⬇️ Download skill-gap CSV",
+                    data=csv_data,
+                    file_name="skillmatch_skill_gaps.csv",
+                    mime="text/csv",
+                    use_container_width=True,
+                )
+        st.caption("Available formats: HTML, TXT, and CSV. PDF export is not included in this version.")
+
+elif page == "ℹ️ About":
+    st.subheader("About SkillMatch AI")
+    st.markdown(
+        '<div class="section-intro">SkillMatch AI helps job seekers compare a text-based PDF CV with a target job description, understand detected gaps, and plan practical improvements.</div>',
+        unsafe_allow_html=True,
+    )
+    about_left, about_right = st.columns(2, gap="large")
+    with about_left:
+        st.markdown(
+            """
+            <div class="about-card components">
+              <h3>🌿 Current analysis components</h3>
+              <ul>
+                <li>PDF text extraction with PyMuPDF</li>
+                <li>Skill dictionary matching by category</li>
+                <li>TF-IDF and cosine similarity</li>
+                <li>Skill coverage and missing-skill identification</li>
+                <li>Heuristic ATS-readiness indicators</li>
+                <li>CV section checks and improvement suggestions</li>
+                <li>Interactive charts and HTML / TXT / CSV reports</li>
+              </ul>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with about_right:
+        st.markdown(
+            """
+            <div class="about-card limitations">
+              <h3>⚠️ Limitations</h3>
+              <ul>
+                <li>Skill detection depends on <code>data/skills.json</code>; unlisted skills may be missed.</li>
+                <li>Text similarity is not full semantic understanding of the job.</li>
+                <li>ATS readiness is a heuristic, not a vendor ATS score.</li>
+                <li>The system cannot verify truthfulness, proficiency, or work experience.</li>
+                <li>Scanned PDFs without a text layer may not be readable.</li>
+              </ul>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    st.info("Use the results as guidance, not as a hiring prediction. Never add skills or achievements to a CV unless they are true.")
